@@ -1,9 +1,7 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
 import com.proyectograduacion.PGwebONG.domain.direccion.DatosDireccion;
-import com.proyectograduacion.PGwebONG.domain.direccion.Direccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.DatosDiscapacidad;
-import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDateTime;
@@ -20,7 +18,7 @@ public record DatosActualizarPersona(
         String telefono,
         LocalDateTime fechaNacimiento,
         String etnia,
-        String genero,
+        Genero genero,
         String estadoCivil,
         Integer numeroHijos,
         DatosDireccion direccion,
@@ -29,7 +27,7 @@ public record DatosActualizarPersona(
         String area,
         String cultivo,
         boolean vendeExecedenteCosecha,
-        String tipoProductor,
+        TipoProductor tipoProductor,
         String responsable,
         Organizacion organizacion,
         String tipoVivienda

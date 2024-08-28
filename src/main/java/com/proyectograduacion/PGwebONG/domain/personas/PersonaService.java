@@ -24,6 +24,12 @@ public class PersonaService {
         if (personaRepository.existsByDpi(datosRegistroPersona.dpi())) {
             throw new validacionDeIntegridad("El DPI ya fue registrado");
         }
+        if(personaRepository.existsByNIT(datosRegistroPersona.NIT())){
+            throw new validacionDeIntegridad("El NIT ya fue registrado");
+        }
+        if(personaRepository.existsByTelefono(datosRegistroPersona.telefono())){
+            throw new validacionDeIntegridad("El telefono ya fue registrado");
+        }
             Persona newPerson = new Persona(datosRegistroPersona);
             personaRepository.save(newPerson);
             return newPerson;
@@ -34,11 +40,10 @@ public class PersonaService {
     }
 
 
-    public Persona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
+    public DatosDetallePersona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
         Persona persona = verificarExistencia(datosActualizarPersona.dpi());
         persona.actualizarPersona(datosActualizarPersona);
-        DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
-        return persona;
+        return new DatosDetallePersona(persona);
     }
 
     public void eliminarPersona(String dpi) {

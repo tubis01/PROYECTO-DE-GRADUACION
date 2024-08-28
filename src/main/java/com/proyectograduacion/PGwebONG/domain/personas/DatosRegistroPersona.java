@@ -30,8 +30,8 @@ public record DatosRegistroPersona(
         LocalDateTime fechaNacimiento,
         @NotBlank
         String etnia,
-        @NotBlank
-        String genero,
+        @NotNull
+        Genero genero,
         @NotBlank
         String estadoCivil,
         @NotNull
@@ -48,8 +48,8 @@ public record DatosRegistroPersona(
         String cultivo,
         @NotNull
         boolean vendeExecedenteCosecha,
-        @NotBlank
-        String tipoProductor,
+        @NotNull
+        TipoProductor tipoProductor,
         @NotBlank
         String responsable,
         @NotNull

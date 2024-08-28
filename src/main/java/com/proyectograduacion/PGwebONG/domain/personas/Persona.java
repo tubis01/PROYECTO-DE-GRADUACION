@@ -42,7 +42,9 @@ public class Persona {
     private LocalDateTime fechaNacimiento;
     private String etnia;
 
-    private String genero;
+    @Enumerated(EnumType.STRING)
+    private Genero genero;
+
     private String estadoCivil;
     private Integer numeroHijos;
     private String tipoVivienda;
@@ -60,8 +62,12 @@ public class Persona {
     @Column(name = "vende_excedente_cosecha")
     private boolean vendeExecedenteCosecha;
 
-    private String tipoProductor;
+
+    @Enumerated(EnumType.STRING)
+    private TipoProductor tipoProductor;
+
     private String responsable;
+
     @Enumerated(EnumType.STRING)
     private Organizacion organizacion;
     private boolean activo;
