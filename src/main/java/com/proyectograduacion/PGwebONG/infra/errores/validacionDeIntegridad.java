@@ -1,4 +1,4 @@
-package com.proyectograduacion.PGwebONG.errores;
+package com.proyectograduacion.PGwebONG.infra.errores;
 
 public class validacionDeIntegridad extends RuntimeException {
     public validacionDeIntegridad(String mensaje) {

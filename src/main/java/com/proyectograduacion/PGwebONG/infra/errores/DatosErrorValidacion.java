@@ -1,4 +1,4 @@
-package com.proyectograduacion.PGwebONG.errores;
+package com.proyectograduacion.PGwebONG.infra.errores;
 
 import org.springframework.validation.FieldError;
 

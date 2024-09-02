@@ -1,26 +1,34 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
-import com.proyectograduacion.PGwebONG.errores.validacionDeIntegridad;
+import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PersonaService {
-
+//    inyeccin de dependencias
     private final PersonaRepository personaRepository;
 
     public PersonaService(PersonaRepository personaRepository) {
         this.personaRepository = personaRepository;
     }
 
-
+// listar personas activas
     public Page<DatosDetallePersona> listarPersonas(Pageable pageable) {
         return personaRepository.findByActivoTrue(pageable)
                 .map(DatosDetallePersona::new);
     }
 
+//    listar personas inactivas
+    public Page<DatosDetallePersona> listarPersonasInactivas(Pageable pageable) {
+        return personaRepository.findByActivoFalse(pageable)
+                .map(DatosDetallePersona::new);
+    }
+
+//    registrar persona
     public Persona registrarPersona(DatosRegistroPersona datosRegistroPersona) {
+
         if (personaRepository.existsByDpi(datosRegistroPersona.dpi())) {
             throw new validacionDeIntegridad("El DPI ya fue registrado");
         }
@@ -46,11 +54,22 @@ public class PersonaService {
         return new DatosDetallePersona(persona);
     }
 
+//    eliminacion logica
     public void eliminarPersona(String dpi) {
         Persona persona = verificarExistencia(dpi);
         persona.eliminarPersona();
     }
 
+//    eliminacion fisica
+    public void eliminarPersonaBD(String dpi) {
+        Persona persona = verificarExistencia(dpi);
+        personaRepository.delete(persona);
+    }
+
+    public void activarPersona(String dpi) {
+        Persona persona = verificarExistencia(dpi);
+        persona.activarPersona();
+    }
     private Persona verificarExistencia(String dpi) {
         if (!personaRepository.existsByDpi(dpi)) {
             throw new validacionDeIntegridad("No existe una persona con el DPI proporcionado");

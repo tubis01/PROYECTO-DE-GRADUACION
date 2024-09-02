@@ -1,5 +1,6 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.direccion.CodigoUbicaciones;
 import com.proyectograduacion.PGwebONG.domain.direccion.DatosDireccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.DatosDiscapacidad;
@@ -7,7 +8,7 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 public record DatosRegistroPersona(
         @NotBlank
@@ -18,7 +19,6 @@ public record DatosRegistroPersona(
         String primerNombre,
         @NotBlank
         String segundoNombre,
-
         String tercerNombre,
         @NotBlank
         String primerApellido,
@@ -27,10 +27,12 @@ public record DatosRegistroPersona(
         @NotBlank
         String telefono,
         @NotNull
-        LocalDateTime fechaNacimiento,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+        LocalDate fechaNacimiento,
         @NotBlank
         String etnia,
         @NotNull
+                @Valid
         Genero genero,
         @NotBlank
         String estadoCivil,

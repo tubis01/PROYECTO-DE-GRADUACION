@@ -1,10 +1,12 @@
-package com.proyectograduacion.PGwebONG.errores;
+package com.proyectograduacion.PGwebONG.infra.errores;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -50,41 +52,12 @@ public class TratadorDeErrores {
     public ResponseEntity<String> manejarErrorMensajeNoLegible(HttpMessageNotReadableException e) {
         return ResponseEntity.badRequest().body("Mensaje no legible: " + e.getMessage());
     }
-    /////////////////////////////////////////////////////////////////////////
+    @ControllerAdvice
+    public static class GlobalExceptionHandler {
+        @ExceptionHandler(Exception.class)
+        public ResponseEntity<String> handleException(Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }
 
-//    @ExceptionHandler(EntityNotFoundException.class)
-//    public ResponseEntity trataerErrores404(){
-//        return ResponseEntity.notFound().build();
-//    }
-//
-////    trater erroes 500
-//
-//    @ExceptionHandler(MethodArgumentNotValidException.class)
-//    public ResponseEntity tratarErrores400(MethodArgumentNotValidException e) {
-//        var errores  = e.getBindingResult().getFieldErrors().stream()
-//                .map(DatosErrorValidacion::new)
-//                .toList();
-//        return ResponseEntity.badRequest().body(errores);
-//    }
-//
-//    @ExceptionHandler(validacionDeIntegridad.class)
-//    public ResponseEntity erroHandlerValidacionDeIntegridad(Exception e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
-//
-//    @ExceptionHandler(ValidationException.class)
-//    public ResponseEntity erroHandlerValidacionDeNegocio(Exception e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
-//
-//    @ExceptionHandler(NullPointerException.class)
-//    public ResponseEntity erroHandlerValidacionActivoInactivo(Exception e) {
-//        return ResponseEntity.badRequest().body(e.getMessage());
-//    }
-//
-//    private record  DatosErrorValidacion(String campo, String mensaje){
-//        public DatosErrorValidacion(FieldError error){
-//            this(error.getField(), error.getDefaultMessage());
-//        }
-//    }
 }

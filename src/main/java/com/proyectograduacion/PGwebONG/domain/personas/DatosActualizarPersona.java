@@ -4,6 +4,7 @@ import com.proyectograduacion.PGwebONG.domain.direccion.DatosDireccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.DatosDiscapacidad;
 import jakarta.validation.constraints.NotBlank;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public record DatosActualizarPersona(
@@ -16,7 +17,7 @@ public record DatosActualizarPersona(
         String primerApellido,
         String segundoApellido,
         String telefono,
-        LocalDateTime fechaNacimiento,
+        LocalDate fechaNacimiento,
         String etnia,
         Genero genero,
         String estadoCivil,

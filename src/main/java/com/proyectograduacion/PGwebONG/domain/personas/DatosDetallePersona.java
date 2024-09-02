@@ -1,11 +1,13 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.direccion.Direccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
-public record DatosDetallePersona(String DPI,
+public record DatosDetallePersona(
+                                    String DPI,
                                   String NIT,
                                   String primerNombre,
                                   String segundoNombre,
@@ -13,7 +15,8 @@ public record DatosDetallePersona(String DPI,
                                   String primerApellido,
                                   String segundoApellido,
                                   String telefono,
-                                  LocalDateTime fechaNacimiento,
+                                  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+                                  LocalDate fechaNacimiento,
                                   String etnia,
                                   Genero genero,
                                   String estadoCivil,

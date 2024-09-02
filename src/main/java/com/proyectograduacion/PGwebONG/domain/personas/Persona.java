@@ -7,8 +7,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 
 @Entity(name = "Persona")
@@ -17,7 +18,7 @@ import java.time.LocalDateTime;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class Persona {
+public class Persona  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +40,7 @@ public class Persona {
     @Column(unique = true)
     private String telefono;
 
-    private LocalDateTime fechaNacimiento;
+    private LocalDate fechaNacimiento;
     private String etnia;
 
     @Enumerated(EnumType.STRING)
