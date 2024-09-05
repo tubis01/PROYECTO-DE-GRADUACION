@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
-import java.util.stream.Collectors;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -40,12 +38,8 @@ public class PersonaController {
 
         PagedModel<EntityModel<DatosDetallePersona>> pagedModel = assembler.toModel(personas, persona -> {
             Link selfLink = linkTo(methodOn(PersonaController.class).obtenerPersonaPorDPI(persona.DPI())).withSelfRel();
-            Link inactivosLInk = linkTo(methodOn(PersonaController.class).listarPersonasInactivas(null, null)).withRel("inactivos");
             Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(persona.DPI())).withRel("eliminar");
-            Link eliminarBDLink = linkTo(methodOn(PersonaController.class).eliminarPersonaBD(persona.DPI())).withRel("eliminarBD");
-            Link modificarLink = linkTo(methodOn(PersonaController.class).modificarPersona(null)).withRel("modificar");
-            Link crearLink = linkTo(methodOn(PersonaController.class).registrarPersona(null, null)).withRel("crear");
-            return EntityModel.of(persona, selfLink, eliminarLink, eliminarBDLink,modificarLink, crearLink, inactivosLInk);
+            return EntityModel.of(persona, selfLink, eliminarLink);
         });
 
         return ResponseEntity.ok(pagedModel);
@@ -70,10 +64,13 @@ public class PersonaController {
 //    obtener persona por dpi
 
     @GetMapping("/{dpi}")
-    public ResponseEntity<DatosDetallePersona> obtenerPersonaPorDPI(@PathVariable String dpi) {
+
+    public ResponseEntity<EntityModel<DatosDetallePersona>> obtenerPersonaPorDPI(@PathVariable String dpi){
         Persona persona = personaService.obtenerPersonaPorDPI(dpi);
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
-        return ResponseEntity.ok(personaDTO);
+        Link selfLink = linkTo(methodOn(PersonaController.class).obtenerPersonaPorDPI(dpi)).withSelfRel();
+        Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(dpi)).withRel("eliminar");
+        return ResponseEntity.ok(EntityModel.of(personaDTO, selfLink, eliminarLink));
     }
 
 

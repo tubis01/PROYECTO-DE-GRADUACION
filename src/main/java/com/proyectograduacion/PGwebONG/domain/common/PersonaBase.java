@@ -31,11 +31,11 @@ public abstract class  PersonaBase {
     @Column(unique = true)
     private String telefono;
 
-    private String comentarios;
+//    private String comentarios;
 
     private boolean activo;
 
-    public void actualizarDatos(String nombre, String apellido, Genero genero, LocalDate fechaNacimiento, String correo, String telefono, String comentarios){
+    public void actualizarDatos(String nombre, String apellido, Genero genero, LocalDate fechaNacimiento, String correo, String telefono){
         if(nombre != null){
             this.nombre = nombre;
         }
@@ -54,9 +54,9 @@ public abstract class  PersonaBase {
         if(telefono != null){
             this.telefono = telefono;
         }
-        if(comentarios != null){
-            this.comentarios = comentarios;
-        }
+//        if(comentarios != null){
+//            this.comentarios = comentarios;
+//        }
     }
 
     public void activar(){

@@ -5,7 +5,6 @@ import com.proyectograduacion.PGwebONG.domain.discapacidad.DatosDiscapacidad;
 import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record DatosActualizarPersona(
         @NotBlank

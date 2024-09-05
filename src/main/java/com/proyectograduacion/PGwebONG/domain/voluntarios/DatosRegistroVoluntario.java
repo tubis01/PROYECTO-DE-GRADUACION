@@ -2,7 +2,6 @@ package com.proyectograduacion.PGwebONG.domain.voluntarios;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.personas.Genero;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

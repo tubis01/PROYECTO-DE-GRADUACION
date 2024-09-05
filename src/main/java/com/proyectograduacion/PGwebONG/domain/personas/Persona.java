@@ -2,12 +2,12 @@ package com.proyectograduacion.PGwebONG.domain.personas;
 
 import com.proyectograduacion.PGwebONG.domain.direccion.Direccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
+import com.proyectograduacion.PGwebONG.domain.responsables.Responsable;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 
@@ -67,7 +67,9 @@ public class Persona  {
     @Enumerated(EnumType.STRING)
     private TipoProductor tipoProductor;
 
-    private String responsable;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name= "id_responsable")
+    private Responsable responsable;
 
     @Enumerated(EnumType.STRING)
     private Organizacion organizacion;
@@ -75,7 +77,7 @@ public class Persona  {
 
 
     // Constructor que usa DatosRegistroPersona
-    public Persona(DatosRegistroPersona registroPersona) {
+    public Persona(DatosRegistroPersona registroPersona, Responsable responsable) {
         this.dpi = registroPersona.dpi();
         this.primerNombre = registroPersona.primerNombre();
         this.segundoNombre = registroPersona.segundoNombre();
@@ -97,13 +99,13 @@ public class Persona  {
         this.cultivo = registroPersona.cultivo();
         this.vendeExecedenteCosecha = registroPersona.vendeExecedenteCosecha();
         this.tipoProductor = registroPersona.tipoProductor();
-        this.responsable = registroPersona.responsable();
+        this.responsable = responsable;
         this.organizacion = registroPersona.organizacion();
         this.activo = true;
     }
 
     // Método para actualizar la Persona
-    public void actualizarPersona(DatosActualizarPersona datosActualizarPersona) {
+    public void actualizarPersona(DatosActualizarPersona datosActualizarPersona, Responsable responsable) {
         if(datosActualizarPersona.NIT() != null) {
             this.NIT = datosActualizarPersona.NIT();
         }
@@ -163,7 +165,7 @@ public class Persona  {
         }
 
         if(datosActualizarPersona.responsable() != null) {
-            this.responsable = datosActualizarPersona.responsable();
+            this.responsable = responsable;
         }
 
         if(datosActualizarPersona.organizacion() != null) {

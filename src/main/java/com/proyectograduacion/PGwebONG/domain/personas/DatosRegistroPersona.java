@@ -52,8 +52,8 @@ public record DatosRegistroPersona(
         boolean vendeExecedenteCosecha,
         @NotNull
         TipoProductor tipoProductor,
-        @NotBlank
-        String responsable,
+        @NotNull
+        Long responsable,
         @NotNull
         Organizacion organizacion,
         @NotBlank

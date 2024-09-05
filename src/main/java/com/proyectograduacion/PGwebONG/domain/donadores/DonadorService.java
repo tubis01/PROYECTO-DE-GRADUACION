@@ -45,7 +45,11 @@ public class DonadorService {
 
 //    modificar donador
 
-
+    public Donador modificarDonador(DatosActualizarDonador datosActualizarDonador) {
+        Donador donador = verificarExistenciaDonador(datosActualizarDonador.id());
+        donador.actualizarDonador(datosActualizarDonador);
+        return donador;
+    }
 
 //    validar existencia de donador
     private Donador verificarExistenciaDonador(Long id) {
@@ -55,11 +59,7 @@ public class DonadorService {
         return donadorRepository.getReferenceById(id);
     }
 
-    public Donador modificarDonador(DatosActualizarDonador datosActualizarDonador) {
-        Donador donador = verificarExistenciaDonador(datosActualizarDonador.id());
-        donador.actualizarDonador(datosActualizarDonador);
-        return donador;
-    }
+
 
     public void eliminarDonador(Long id) {
         Donador donador = verificarExistenciaDonador(id);
@@ -76,4 +76,6 @@ public class DonadorService {
         Donador donador = verificarExistenciaDonador(id);
         donador.activar();
     }
+
+
 }

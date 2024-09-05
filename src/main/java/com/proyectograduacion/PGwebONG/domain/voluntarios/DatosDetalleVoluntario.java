@@ -1,7 +1,6 @@
 package com.proyectograduacion.PGwebONG.domain.voluntarios;
 
 import com.proyectograduacion.PGwebONG.domain.personas.Genero;
-import jakarta.validation.constraints.NotNull;
 
 public record DatosDetalleVoluntario(
         Long id,

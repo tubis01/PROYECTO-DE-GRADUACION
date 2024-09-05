@@ -4,10 +4,14 @@ package com.proyectograduacion.PGwebONG.domain.voluntarios;
 import com.proyectograduacion.PGwebONG.domain.common.PersonaBase;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
+import lombok.Getter;
 
+@Getter
 @Entity(name = "Voluntario")
 @Table(name = "voluntarios")
 public class Voluntario  extends PersonaBase {
+
+    private String comentarios;
 
     public Voluntario(DatosRegistroVoluntario registroVoluntario){
         super();
@@ -17,7 +21,7 @@ public class Voluntario  extends PersonaBase {
         this.setFechaNacimiento(registroVoluntario.fechaNacimiento());
         this.setCorreo(registroVoluntario.correo());
         this.setTelefono(registroVoluntario.telefono());
-        this.setComentarios(registroVoluntario.comentarios());
+        this.comentarios = registroVoluntario.comentarios();
         this.setActivo(true);
     }
 
@@ -31,8 +35,9 @@ public class Voluntario  extends PersonaBase {
                 datosActualizarVoluntario.genero(),
                 datosActualizarVoluntario.fechaNacimiento(),
                 datosActualizarVoluntario.correo(),
-                datosActualizarVoluntario.telefono(),
-                datosActualizarVoluntario.comentarios()
+                datosActualizarVoluntario.telefono()
+//                datosActualizarVoluntario.comentarios()
         );
     }
+
 }

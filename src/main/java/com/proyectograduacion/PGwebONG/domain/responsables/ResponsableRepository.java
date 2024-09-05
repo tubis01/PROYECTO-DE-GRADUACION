@@ -1,4 +1,17 @@
 package com.proyectograduacion.PGwebONG.domain.responsables;
 
-public interface ResponsableRepository {
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface ResponsableRepository extends JpaRepository<Responsable, Long> {
+    Page<Responsable> findByActivoTrue(Pageable pageable);
+
+    Page<Responsable> findByActivoFalse(Pageable pageable);
+
+    boolean existsByCorreo(String correo);
+
+    boolean existsByTelefono(String telefono);
 }

@@ -46,10 +46,9 @@ public class VoluntarioController {
 //    listar voluntarios inactivos
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleVoluntario>>> listarVoluntariosInactivos(Pageable pageable,
-                                                                                                     PagedResourcesAssembler<DatosDetalleVoluntario> pagedAssembler){
+                                                                                                     PagedResourcesAssembler<DatosDetalleVoluntario> assembler){
         Page<DatosDetalleVoluntario> voluntarios = voluntarioService.listarVoluntariosInactivos(pageable);
-
-        PagedModel<EntityModel<DatosDetalleVoluntario>> pagedModel = pagedAssembler.toModel(voluntarios, voluntario ->{
+        PagedModel<EntityModel<DatosDetalleVoluntario>> pagedModel = assembler.toModel(voluntarios, voluntario ->{
             Link selfLink = linkTo(methodOn(VoluntarioController.class).obtenerVoluntarioPorId(voluntario.id())).withSelfRel();
             Link activarLink = linkTo(methodOn(VoluntarioController.class).activarVoluntario(voluntario.id())).withRel("activar");
             Link eliminarBDLink = linkTo(methodOn(VoluntarioController.class).eliminarVoluntarioBD(voluntario.id())).withRel("eliminarBD");
