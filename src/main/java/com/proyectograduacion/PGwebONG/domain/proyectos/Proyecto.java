@@ -27,6 +27,8 @@ public class Proyecto {
     @Column(name = "fecha_fin")
     private LocalDate fechaFin;
 
+
+
     private boolean activo;
 
     public Proyecto(DatosRegistroProyecto datosRegistroProyecto) {

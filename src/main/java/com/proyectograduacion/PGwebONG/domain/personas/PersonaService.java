@@ -47,12 +47,6 @@ public class PersonaService {
     }
 
 
-//    public DatosDetallePersona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
-//        Persona persona = verificarExistencia(datosActualizarPersona.dpi());
-//        persona.actualizarPersona(datosActualizarPersona);
-//        return new DatosDetallePersona(persona);
-//    }
-
     public DatosDetallePersona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
         Persona persona = verificarExistencia(datosActualizarPersona.dpi());
         Responsable responsable = datosActualizarPersona.responsable() != null ?
@@ -78,7 +72,7 @@ public class PersonaService {
         persona.activarPersona();
     }
 
-    private Persona verificarExistencia(String dpi) {
+    public Persona verificarExistencia(String dpi) {
         if (!personaRepository.existsByDpi(dpi)) {
             throw new validacionDeIntegridad("No existe una persona con el DPI proporcionado");
         }
