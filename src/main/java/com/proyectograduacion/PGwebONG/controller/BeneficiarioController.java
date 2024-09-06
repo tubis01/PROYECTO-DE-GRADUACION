@@ -4,7 +4,6 @@ import com.proyectograduacion.PGwebONG.domain.beneficiario.Beneficiario;
 import com.proyectograduacion.PGwebONG.domain.beneficiario.BeneficiarioService;
 import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosDetalleBeneficiario;
 import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosregistroBeneficiario;
-import com.proyectograduacion.PGwebONG.domain.personas.DatosDetallePersona;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
