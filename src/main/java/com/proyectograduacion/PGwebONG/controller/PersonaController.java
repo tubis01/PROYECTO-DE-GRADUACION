@@ -10,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -76,6 +77,7 @@ public class PersonaController {
 
 //    registrar persona
     @PostMapping("/registrar")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<DatosDetallePersona> registrarPersona(@RequestBody @Valid DatosRegistroPersona datosRegistroPersona,
                                                                 UriComponentsBuilder uriBuilder) {
         Persona persona = personaService.registrarPersona(datosRegistroPersona);
