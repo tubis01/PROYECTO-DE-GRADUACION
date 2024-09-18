@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.domain.usuarios;
 
-import com.jayway.jsonpath.JsonPath;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +9,7 @@ import java.util.Optional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
-    UserDetails findByUsuario(String usuario);
+    Optional<Usuario> findByUsuario(String usuario);
 
     Page<Usuario> findByActivoTrue(Pageable pageable);
 
@@ -20,4 +19,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
     boolean existsByUsuario(String usuario);
 
+    Usuario findByUsuarioOrEmail(String usuario, String email);
 }

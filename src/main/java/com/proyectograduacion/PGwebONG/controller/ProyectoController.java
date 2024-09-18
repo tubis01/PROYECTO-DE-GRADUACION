@@ -13,6 +13,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -31,7 +32,6 @@ public class ProyectoController {
         this.proyectoService = proyectoService;
     }
 
-    //    obtener lista de proyectos
     /**
      * Lista los proyectos.
      *
@@ -40,6 +40,7 @@ public class ProyectoController {
      * @return ResponseEntity con la lista de proyectos.
      */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectos(Pageable pageable,
                                                                    PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
@@ -53,6 +54,15 @@ public class ProyectoController {
         return ResponseEntity.ok(pagedModel);
     }
 
+    /**
+     * Lista los proyectos inactivos.
+     *
+     * @param pageable Paginación.
+     * @param assembler Ensamblador de recursos paginados.
+     * @return ResponseEntity con la lista de proyectos inactivos.
+     */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/Inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectosInactivos(Pageable pageable,
                                                                    PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
@@ -71,6 +81,7 @@ public class ProyectoController {
      * @param id Id del proyecto.
      * @return ResponseEntity con el proyecto.
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<DatosDetalleProyecto>> obtenerProyectoPorId(@PathVariable Long id) {
         Proyecto proyecto = proyectoService.obtenerProyectoPorId(id);
@@ -78,6 +89,15 @@ public class ProyectoController {
         return ResponseEntity.ok(EntityModel.of(proyectoDTO));
     }
 
+    /**
+     * Registra un proyecto.
+     *
+     * @param datosRegistroProyecto Datos del proyecto a registrar.
+     * @param uriComponentsBuilder  UriComponentsBuilder.
+     * @return ResponseEntity con el proyecto registrado.
+     */
+
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<EntityModel<DatosDetalleProyecto>> registrarProyecto(@RequestBody @Valid DatosRegistroProyecto datosRegistroProyecto,
                                                                                UriComponentsBuilder uriComponentsBuilder) {
@@ -88,9 +108,16 @@ public class ProyectoController {
 
     }
 
+    /**
+     * Elimina un proyecto.
+     *
+     * @param id Id del proyecto a eliminar.
+     * @return ResponseEntity con el proyecto eliminado.
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/cancelar/{id}")
     @Transactional
-    public ResponseEntity<EntityModel<DatosDetalleProyecto>> eliminarProyecto(@PathVariable Long id) {
+    public ResponseEntity<Proyecto> eliminarProyecto(@PathVariable Long id) {
         proyectoService.eliminarProyecto(id);
         return ResponseEntity.noContent().build();
     }

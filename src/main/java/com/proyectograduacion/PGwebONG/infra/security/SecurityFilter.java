@@ -18,10 +18,14 @@ public class SecurityFilter  extends OncePerRequestFilter {
 
     private final TokenService tokenService;
     private final UsuarioRepository usuarioRepository;
+    private final AutenticacionService autenticacionService;
 
-    public SecurityFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
+
+    public SecurityFilter(TokenService tokenService, UsuarioRepository usuarioRepository,
+                          AutenticacionService autenticacionService) {
         this.tokenService = tokenService;
         this.usuarioRepository = usuarioRepository;
+        this.autenticacionService = autenticacionService;
     }
 
     @Override
@@ -31,7 +35,7 @@ public class SecurityFilter  extends OncePerRequestFilter {
             String token = autHeader.replace("Bearer ", "");
             String subject = tokenService.getSubject(token);
             if (subject != null) {
-                UserDetails usuario = usuarioRepository.findByUsuario(subject);
+                UserDetails usuario = autenticacionService.loadUserByUsername(subject);
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken
                         (usuario, null, usuario.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

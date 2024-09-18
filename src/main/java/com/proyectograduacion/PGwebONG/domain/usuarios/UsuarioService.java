@@ -52,6 +52,9 @@ public class UsuarioService {
 
         Set<Rol> roles = new HashSet<>();
         roles.add(rolRepository.findByNombre(RolNombre.ROLE_USER));
+        if(datosRegistroUsuario.rol().contains("admin")){
+            roles.add(rolRepository.findByNombre(RolNombre.ROLE_ADMIN));
+        }
         usuario.setRoles(roles);
         usuarioRepository.save(usuario);
         return usuario;

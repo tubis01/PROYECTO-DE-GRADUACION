@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity(name = "Beneficiario")
-@Table(name = "beneficiarios")
+@Table(name = "beneficiarios", uniqueConstraints = {@UniqueConstraint(columnNames = {"id_persona", "id_proyecto"})})
 @Getter
 @Setter
 @NoArgsConstructor
@@ -35,4 +35,7 @@ public class Beneficiario {
     }
 
 
+    public void desactivar() {
+        this.activo = false;
+    }
 }

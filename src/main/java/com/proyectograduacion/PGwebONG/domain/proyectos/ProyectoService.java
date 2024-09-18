@@ -1,17 +1,22 @@
 package com.proyectograduacion.PGwebONG.domain.proyectos;
 
+import com.proyectograduacion.PGwebONG.domain.proyectos.validaciones.ValidadorProyectos;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProyectoService {
 
+    private final List<ValidadorProyectos> validadores;
     private final ProyectoRepository proyectoRepository;
 
-    public ProyectoService(ProyectoRepository proyectoRepository) {
+    public ProyectoService(ProyectoRepository proyectoRepository, List<ValidadorProyectos> validadores) {
         this.proyectoRepository = proyectoRepository;
+        this.validadores = validadores;
     }
     public Page<DatosDetalleProyecto> listarProyectos(Pageable pageable) {
         return proyectoRepository.findByActivoTrue(pageable)
@@ -36,6 +41,7 @@ public class ProyectoService {
     }
 
     public Proyecto registrarProyecto(DatosRegistroProyecto datosRegistroProyecto) {
+        validadores.forEach(validador -> validador.validar(datosRegistroProyecto));
         Proyecto newProyecto = new Proyecto(datosRegistroProyecto);
         proyectoRepository.save(newProyecto);
         return newProyecto;

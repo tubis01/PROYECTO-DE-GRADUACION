@@ -1,7 +1,6 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.domain.usuarios.*;
-import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -10,6 +9,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -27,10 +27,9 @@ public class UsuarioController {
         this.usuarioService = usuarioService;
     }
 
-/*
 
- */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleUsuario>>> listarUsuario(Pageable pageable,
                                                                                       PagedResourcesAssembler<DatosDetalleUsuario> assembler) {
@@ -46,6 +45,7 @@ public class UsuarioController {
     /*
     obtener usuario por id
      */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<DatosDetalleUsuario> obtenerUsuarioPorId(Long id){
         Usuario usuario = usuarioService.obtenerUsuarioPorId(id);
@@ -56,6 +56,7 @@ public class UsuarioController {
     * Método que lista los usuarios inactivos
      */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listarInactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleUsuario>>> listarUsuariosInactivos(Pageable pageable,
                                                                                       PagedResourcesAssembler<DatosDetalleUsuario> assembler) {
@@ -72,6 +73,7 @@ public class UsuarioController {
     metodo para registrar usuario
      */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetalleUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario,
                                                                UriComponentsBuilder uriBuilder){
@@ -81,10 +83,12 @@ public class UsuarioController {
         return ResponseEntity.created(uri).body(usuarioDTO);
     }
 
+
     /*
     metodo para actualizar usuario
      */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar")
     public ResponseEntity<DatosDetalleUsuario> actualizarUsuario(@RequestBody @Valid DatosActualizarUsuario datos){
         Usuario usuario = usuarioService.actualizarUsuario(datos);
@@ -95,28 +99,13 @@ public class UsuarioController {
     metodo para deshabilitar usuario
      */
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> deshabilitarUsuario(@PathVariable Long id){
         usuarioService.deshabilitarUsuario(id);
         return ResponseEntity.noContent().build();
     }
 
-    /*
-    * Método que asigna roles a un usuario
-     */
 
-    @PostMapping("/{id}/roles")
-    @Transactional
-    public ResponseEntity<DatosDetalleUsuario> asignarRoles(@PathVariable Long id, @RequestBody RolNombre datos){
-        usuarioService.asignarRol(id, datos);
-        return ResponseEntity.ok(new DatosDetalleUsuario(usuarioService.obtenerUsuarioPorId(id)));
-    }
-
-    @DeleteMapping("/{id}/roles")
-    @Transactional
-    public ResponseEntity<DatosDetalleUsuario> eliminarRoles(@PathVariable Long id, @RequestBody RolNombre datos){
-        usuarioService.removerRol(id, datos);
-        return ResponseEntity.ok(new DatosDetalleUsuario(usuarioService.obtenerUsuarioPorId(id)));
-    }
 
 }
