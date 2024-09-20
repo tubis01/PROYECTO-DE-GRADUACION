@@ -77,25 +77,6 @@ public class UsuarioService {
         usuario.deshabilitarUsuario();
     }
 
-    /*
-    metodo para asignar roles
-     */
-    public void asignarRol(Long idUsuario, RolNombre  rolNombre){
-        Usuario usuario = verificarExistenciaUsuario(idUsuario);
-        Rol rol = rolRepository.findByNombre(rolNombre);
-        usuario.getRoles().add(rol);
-        usuarioRepository.save(usuario);
-    }
-
-    /*
-    metodo para quitar roles
-     */
-    public void removerRol(Long idUsuario, RolNombre rolNombre){
-        Usuario usuario = verificarExistenciaUsuario(idUsuario);
-        Rol rol = rolRepository.findByNombre(rolNombre);
-        usuario.getRoles().remove(rol);
-        usuarioRepository.save(usuario);
-        }
 
     /*
     * Método que verifica la existencia de un usuario

@@ -15,7 +15,7 @@ import org.springframework.security.web.access.AccessDeniedHandlerImpl;
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity
 public class SecurityConfiguration {
 
     private final SecurityFilter securityFilter;

@@ -44,7 +44,7 @@ public class TokenService {
     }
 
         public String getSubject(String token){
-            DecodedJWT verifier = null;
+            DecodedJWT verifier;
 
             try {
                 verifier = JWT.require(Algorithm.HMAC256(apiSecret))

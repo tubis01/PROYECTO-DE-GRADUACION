@@ -9,6 +9,9 @@ import com.proyectograduacion.PGwebONG.domain.proyectos.ProyectoRepository;
 import com.proyectograduacion.PGwebONG.domain.proyectos.ProyectoService;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import jakarta.transaction.Transactional;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -36,12 +39,10 @@ public class BeneficiarioService {
         this.validadores = validadores;
     }
 
-
     public Page<DatosDetalleBeneficiario> listarBeneficiarios(Pageable pageable) {
         return beneficiarioRepository.findByActivoTrue(pageable)
                 .map(DatosDetalleBeneficiario::new);
     }
-
 
 
     @Transactional
@@ -61,7 +62,6 @@ public class BeneficiarioService {
         return beneficiario;
     }
 
-
     public Beneficiario obtenerBeneficiarioPorId(Long id) {
         return verificarExistenciaBeneficiario(id);
     }
@@ -77,10 +77,32 @@ public class BeneficiarioService {
 
 
     public void eliminarBeneficiario(Long id) {
-
         Beneficiario beneficiario = verificarExistenciaBeneficiario(id);
         beneficiario.desactivar();
     }
+
+//    public Workbook exportarBeneficiarioAExcel(Workbook workbook){
+//
+//        Sheet sheet = workbook.createSheet("Beneficiarios");
+//
+//        Row header = sheet.createRow(0);
+//        header.createCell(0).setCellValue("DPI");
+//        header.createCell(1).setCellValue("Nombre");
+//        header.createCell(2).setCellValue("Apellido");
+//
+//        List<Beneficiario> beneficiarios = beneficiarioRepository.findAll();
+//
+//        int rowNum = 1;
+//
+//        for(Beneficiario beneficiario : beneficiarios){
+//            Row row = sheet.createRow(rowNum++);
+//            row.createCell(0).setCellValue(beneficiario.getPersona().getDpi());
+//            row.createCell(1).setCellValue(beneficiario.getPersona().getPrimerNombre());
+//            row.createCell(2).setCellValue(beneficiario.getPersona().getPrimerApellido());
+//        }
+//
+//        return workbook;
+//    }
 
     public Beneficiario verificarExistenciaBeneficiario(Long id) {
         if(!beneficiarioRepository.existsById(id)){
