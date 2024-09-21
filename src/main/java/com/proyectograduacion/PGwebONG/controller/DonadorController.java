@@ -86,7 +86,7 @@ public class DonadorController {
      * @return ResponseEntity con el donador obtenido.
      */
 
-    @GetMapping("/{id}")
+    @GetMapping("/detalle/{id}")
     public ResponseEntity<EntityModel<DatosDetalleDonador>> obtenerDonadorPorId(@PathVariable Long id) {
         Donador donador = donadorService.obtenerDonadorPorId(id);
         DatosDetalleDonador donadorDTO = new DatosDetalleDonador(donador);

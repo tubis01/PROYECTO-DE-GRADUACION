@@ -2,6 +2,8 @@ package com.proyectograduacion.PGwebONG.domain.donadores;
 
 import com.proyectograduacion.PGwebONG.domain.personas.Genero;
 
+import java.time.LocalDate;
+
 public record DatosDetalleDonador(
         Long id,
         String nombre,
@@ -9,7 +11,8 @@ public record DatosDetalleDonador(
         Genero genero,
         String correo,
         String telefono,
-        String comentarios
+        String comentarios,
+        LocalDate fechaNacimiento
 ) {
 
 
@@ -21,7 +24,8 @@ public record DatosDetalleDonador(
                 donador.getGenero(),
                 donador.getCorreo(),
                 donador.getTelefono(),
-                donador.getComentarios()
+                donador.getComentarios(),
+                donador.getFechaNacimiento()
         );
 
     }
