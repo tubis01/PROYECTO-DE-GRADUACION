@@ -22,13 +22,23 @@ public class ReporteController {
     }
 
     @GetMapping("/beneficiarioProyeto")
-    public ResponseEntity<List<Beneficiario>> reporteBeneficiariosPorProyecto(@RequestParam Long idProyecto, @RequestParam boolean activo) {
-        return ResponseEntity.ok(reporteService.generarReporteBeneficiariosPorProyecto(idProyecto, activo));
+    public ResponseEntity<Long> reporteBeneficiariosPorProyecto(@RequestParam Long idProyecto, @RequestParam boolean activo) {
+        return ResponseEntity.ok(reporteService.contarBeneficiariosPorProyecto(idProyecto, activo));
     }
 
     @GetMapping("/proyectosPorEstado")
-    public ResponseEntity<List<Proyecto>> reporteProyectosPorEstado(@RequestParam Estado estado) {
-        return ResponseEntity.ok(reporteService.generarReportePorEstado(estado));
+    public ResponseEntity<Long> reporteProyectosPorEstado(@RequestParam Estado estado) {
+        return ResponseEntity.ok(reporteService.contarProyectosPorEstado(estado));
     }
+
+    @GetMapping("/beneficiariosActivos")
+    public ResponseEntity<Long> reporteBeneficiariosActivos(@RequestParam boolean activo) {
+        return ResponseEntity.ok(reporteService.contarBeneficiariosActivos(activo));
+    }
+
+//    @GetMapping("/beneficiariosPorMes")
+//    public ResponseEntity<Long> reporteBeneficiariosPorMes(@RequestParam int mes) {
+//        return ResponseEntity.ok(reporteService.contarBeneficiariosPorMes(mes));
+//    }
 
 }

@@ -48,7 +48,7 @@ public class ProyectoController {
         Page<DatosDetalleProyecto> proyectos = proyectoService.listarProyectos(pageable);
         PagedModel<EntityModel<DatosDetalleProyecto>> pagedModel = assembler.toModel(proyectos, proyecto ->{
             Link selfLink  = linkTo(methodOn(ProyectoController.class).obtenerProyectoPorId(proyecto.id())).withSelfRel();
-            Link eliminarLink = linkTo(methodOn(ProyectoController.class).eliminarProyecto(proyecto.id())).withRel("eliminar");
+            Link eliminarLink = linkTo(methodOn(ProyectoController.class).finalizarProyecto(proyecto.id())).withRel("eliminar");
             return EntityModel.of(proyecto, selfLink, eliminarLink);
         });
         return ResponseEntity.ok(pagedModel);
@@ -63,7 +63,7 @@ public class ProyectoController {
      */
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/Inactivos")
+    @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectosInactivos(Pageable pageable,
                                                                    PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
 
@@ -115,10 +115,10 @@ public class ProyectoController {
      * @return ResponseEntity con el proyecto eliminado.
      */
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/cancelar/{id}")
+    @DeleteMapping("/finalizar/{id}")
     @Transactional
-    public ResponseEntity<Proyecto> eliminarProyecto(@PathVariable Long id) {
-        proyectoService.eliminarProyecto(id);
+    public ResponseEntity<Proyecto> finalizarProyecto(@PathVariable Long id) {
+        proyectoService.finalizarProyecto(id);
         return ResponseEntity.noContent().build();
     }
 

@@ -89,8 +89,8 @@ public class BeneficiarioController {
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{id}")
     @Transactional
-    public ResponseEntity<Beneficiario> eliminarBeneficiario(@PathVariable Long id){
-        beneficiarioService.eliminarBeneficiario(id);
+    public ResponseEntity<Beneficiario> desactivarBeneficiario(@PathVariable Long id){
+        beneficiarioService.desactivarBeneficiario(id);
         return ResponseEntity.noContent().build();
     }
 

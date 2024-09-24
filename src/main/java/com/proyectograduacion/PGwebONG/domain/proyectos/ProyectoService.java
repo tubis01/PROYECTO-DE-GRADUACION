@@ -1,5 +1,7 @@
 package com.proyectograduacion.PGwebONG.domain.proyectos;
 
+import com.proyectograduacion.PGwebONG.domain.beneficiario.Beneficiario;
+import com.proyectograduacion.PGwebONG.domain.beneficiario.BeneficiarioRepository;
 import com.proyectograduacion.PGwebONG.domain.proyectos.validaciones.ValidadorProyectos;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
@@ -13,11 +15,14 @@ public class ProyectoService {
 
     private final List<ValidadorProyectos> validadores;
     private final ProyectoRepository proyectoRepository;
+    private final BeneficiarioRepository beneficiarioRepository;
 
-    public ProyectoService(ProyectoRepository proyectoRepository, List<ValidadorProyectos> validadores) {
+    public ProyectoService(ProyectoRepository proyectoRepository, List<ValidadorProyectos> validadores, BeneficiarioRepository beneficiarioRepository) {
         this.proyectoRepository = proyectoRepository;
         this.validadores = validadores;
+        this.beneficiarioRepository = beneficiarioRepository;
     }
+
     public Page<DatosDetalleProyecto> listarProyectos(Pageable pageable) {
         return proyectoRepository.findByActivoTrue(pageable)
                 .map(DatosDetalleProyecto::new);
@@ -47,10 +52,20 @@ public class ProyectoService {
         return newProyecto;
     }
 
-    public void eliminarProyecto(Long id) {
+    public void finalizarProyecto(Long id) {
         Proyecto proyecto = verificarExistenciaProyecto(id);
         proyecto.eliminarProyecto();
         proyectoRepository.save(proyecto);
+
+        desactivarBeneficiariosDeProyeto(proyecto);
+    }
+
+    public void desactivarBeneficiariosDeProyeto(Proyecto proyecto){
+
+        List<Beneficiario> beneficiarios = beneficiarioRepository.findByProyecto(proyecto);
+        for (Beneficiario beneficiario : beneficiarios) {
+            beneficiario.desactivar();
+        }
     }
 
 }

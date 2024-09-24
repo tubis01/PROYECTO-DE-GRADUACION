@@ -20,11 +20,24 @@ public class ReporteService {
         this.proyectoRepository = proyectoRepository;
     }
 
-    public List<Beneficiario> generarReporteBeneficiariosPorProyecto(Long idProyecto, boolean activo) {
-        return beneficiarioRepository.findByProyectoIdAndActivo(idProyecto, activo);
+    public long contarBeneficiariosPorProyecto(Long idProyeto, boolean activo ){
+        return beneficiarioRepository.countByProyectoIdAndActivo(idProyeto, activo);
     }
 
-    public List<Proyecto> generarReportePorEstado(Estado estado){
-        return proyectoRepository.findByEstado(estado);
+    public long contarProyectosPorEstado(Estado estado){
+        return proyectoRepository.countByEstado(estado);
     }
+
+    public long contarBeneficiariosActivos(boolean activo){
+        return beneficiarioRepository.countByActivo(activo);
+    }
+
+//    public long contarBeneficiariosPorMes(int mes){
+//        return beneficiarioRepository.countByMesDeAsignacion(mes);
+//    }
+
+
+//    public List<Proyecto> generarReportePorEstado(Estado estado){
+//        return proyectoRepository.findByEstado(estado);
+//    }
 }

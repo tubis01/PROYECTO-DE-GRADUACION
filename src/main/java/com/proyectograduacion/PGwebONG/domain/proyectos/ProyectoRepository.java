@@ -17,4 +17,6 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
     Boolean findActivoById(Long idProyecto);
 
     List<Proyecto> findByEstado(Estado estado);
+
+    long countByEstado(Estado estado);
 }

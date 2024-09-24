@@ -76,33 +76,11 @@ public class BeneficiarioService {
     }
 
 
-    public void eliminarBeneficiario(Long id) {
+    public void desactivarBeneficiario(Long id) {
         Beneficiario beneficiario = verificarExistenciaBeneficiario(id);
         beneficiario.desactivar();
     }
 
-//    public Workbook exportarBeneficiarioAExcel(Workbook workbook){
-//
-//        Sheet sheet = workbook.createSheet("Beneficiarios");
-//
-//        Row header = sheet.createRow(0);
-//        header.createCell(0).setCellValue("DPI");
-//        header.createCell(1).setCellValue("Nombre");
-//        header.createCell(2).setCellValue("Apellido");
-//
-//        List<Beneficiario> beneficiarios = beneficiarioRepository.findAll();
-//
-//        int rowNum = 1;
-//
-//        for(Beneficiario beneficiario : beneficiarios){
-//            Row row = sheet.createRow(rowNum++);
-//            row.createCell(0).setCellValue(beneficiario.getPersona().getDpi());
-//            row.createCell(1).setCellValue(beneficiario.getPersona().getPrimerNombre());
-//            row.createCell(2).setCellValue(beneficiario.getPersona().getPrimerApellido());
-//        }
-//
-//        return workbook;
-//    }
 
     public Beneficiario verificarExistenciaBeneficiario(Long id) {
         if(!beneficiarioRepository.existsById(id)){

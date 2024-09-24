@@ -78,7 +78,7 @@ public class ExportarAExcelService {
 
             row.createCell(7).setCellValue(beneficiario.getPersona().getFechaNacimiento().toString());
             row.createCell(8).setCellValue(beneficiario.getPersona().getEtnia());
-            row.createCell(9).setCellValue(beneficiario.getPersona().getGenero().ordinal());
+            row.createCell(9).setCellValue(beneficiario.getPersona().getGenero().name());
             row.createCell(10).setCellValue(beneficiario.getPersona().getEstadoCivil());
             row.createCell(11).setCellValue(beneficiario.getPersona().getNumeroHijos());
             row.createCell(12).setCellValue(beneficiario.getPersona().getTipoVivienda());
@@ -96,9 +96,9 @@ public class ExportarAExcelService {
             row.createCell(22).setCellValue(beneficiario.getPersona().getArea());
             row.createCell(23).setCellValue(beneficiario.getPersona().getCultivo());
             row.createCell(24).setCellValue(beneficiario.getPersona().isVendeExecedenteCosecha() ? "Si" : "No");
-            row.createCell(25).setCellValue(beneficiario.getPersona().getTipoProductor().ordinal());
+            row.createCell(25).setCellValue(beneficiario.getPersona().getTipoProductor().name());
             row.createCell(26).setCellValue(beneficiario.getPersona().getResponsable().getNombre());
-            row.createCell(27).setCellValue(beneficiario.getPersona().getOrganizacion().ordinal());
+            row.createCell(27).setCellValue(beneficiario.getPersona().getOrganizacion().toString());
 
 
         }

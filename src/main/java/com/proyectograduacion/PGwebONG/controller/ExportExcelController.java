@@ -27,7 +27,6 @@ public class ExportExcelController {
     public ResponseEntity<byte[]> exportBeneficiariosAExcel(@RequestParam Long idProyecto,
                                                             @RequestParam boolean activo) throws IOException {
         byte[] excelBytes = exportarAExcelService.exportarBeneficiarioAExcel(idProyecto, activo);
-
         String nombreProyecto = exportarAExcelService.obtenerNombreProyecto(idProyecto);
 
         HttpHeaders headers = new HttpHeaders();

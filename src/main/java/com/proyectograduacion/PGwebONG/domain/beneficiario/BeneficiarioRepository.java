@@ -1,5 +1,6 @@
 package com.proyectograduacion.PGwebONG.domain.beneficiario;
 
+import com.proyectograduacion.PGwebONG.domain.proyectos.Estado;
 import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -19,4 +20,14 @@ public interface BeneficiarioRepository extends JpaRepository<Beneficiario, Long
 
     @Query("SELECT b FROM Beneficiario b WHERE b.proyecto.id = :idProyecto AND b.activo = :activo")
     List<Beneficiario> findByProyectoIdAndActivo(Long idProyecto, boolean activo);
+
+
+    List<Beneficiario> findByProyecto(Proyecto proyecto);
+
+    long countByProyectoIdAndActivo(Long idProyeto, boolean activo);
+
+    long countByActivo(boolean activo);
+
+//    @Query("SELECT COUNT (b) FROM Beneficiario b WHERE MONTH(b.fechaDeAsignacion) = :mes")
+//    long countByMesDeAsignacion(int mes);
 }
