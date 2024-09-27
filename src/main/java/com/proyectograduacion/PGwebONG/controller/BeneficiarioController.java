@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -32,7 +33,7 @@ public class BeneficiarioController {
     }
 
     /**
-     * Lista los proyectos.
+     * Lista los beneficiarios.
      *
      * @param pageable Paginación.
      * @param assembler Ensamblador de recursos paginados.
@@ -80,6 +81,33 @@ public class BeneficiarioController {
     public ResponseEntity<DatosDetalleBeneficiario> obtenerBeneficiarioPorId(@PathVariable Long id){
         Beneficiario beneficiario = beneficiarioService.obtenerBeneficiarioPorId(id);
         return ResponseEntity.ok(new DatosDetalleBeneficiario(beneficiario));
+    }
+
+    /**
+     * Método que busca beneficiarios por DPI parcial
+     * @param dpi DPI parcial del beneficiario a buscar
+     * @param page Página
+     * @param size Tamaño de la página
+     * @return ResponseEntity con la página de beneficiarios encontrados
+     */
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/buscarDpiParcial")
+    public ResponseEntity<List<DatosDetalleBeneficiario>> buscarPorDpiParcial(
+            @RequestParam String dpi,
+            @RequestParam int page,
+            @RequestParam int size){
+        List<DatosDetalleBeneficiario> beneficiarios = beneficiarioService.buscarPorDpiParcial(dpi, page, size);
+        return ResponseEntity.ok(beneficiarios);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/buscarNombreProyecto")
+    public ResponseEntity<List<DatosDetalleBeneficiario>> buscarPorNombreProyecto(
+            @RequestParam String nombreProyecto,
+            @RequestParam int page,
+            @RequestParam int limit){
+        List<DatosDetalleBeneficiario> beneficiarios = beneficiarioService.buscarPorNombreProyecto(nombreProyecto, page, limit);
+        return ResponseEntity.ok(beneficiarios);
     }
 
     /**

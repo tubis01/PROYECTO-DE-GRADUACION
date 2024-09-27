@@ -54,14 +54,13 @@ public class ProyectoService {
 
     public void finalizarProyecto(Long id) {
         Proyecto proyecto = verificarExistenciaProyecto(id);
-        proyecto.eliminarProyecto();
+        proyecto.finalizarProyecto();
         proyectoRepository.save(proyecto);
 
-        desactivarBeneficiariosDeProyeto(proyecto);
+//        desactivarBeneficiariosDeProyeto(proyecto);
     }
 
     public void desactivarBeneficiariosDeProyeto(Proyecto proyecto){
-
         List<Beneficiario> beneficiarios = beneficiarioRepository.findByProyecto(proyecto);
         for (Beneficiario beneficiario : beneficiarios) {
             beneficiario.desactivar();

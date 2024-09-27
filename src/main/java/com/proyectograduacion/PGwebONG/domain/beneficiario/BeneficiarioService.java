@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -44,7 +45,17 @@ public class BeneficiarioService {
                 .map(DatosDetalleBeneficiario::new);
     }
 
+//    public Page<DatosDetalleBeneficiario> buscarPorDpiParcial(String dpi, int page, int size){
+//        PageRequest pageRequest = PageRequest.of(page, size);
+//        return beneficiarioRepository.findByPersonaDpiContaining(dpi, pageRequest)
+//                .map(DatosDetalleBeneficiario::new);
+//    }
 
+    public List<DatosDetalleBeneficiario> buscarPorDpiParcial(String dpi, int page, int limit){
+        PageRequest pageRequest = PageRequest.of(page, limit);
+        return beneficiarioRepository.findByPersonaDpiContaining(dpi, pageRequest)
+                .map(DatosDetalleBeneficiario::new).getContent();
+    }
     @Transactional
     public Beneficiario registrarBeneficiario(DatosregistroBeneficiario datosregistroBeneficiario){
 
@@ -66,6 +77,10 @@ public class BeneficiarioService {
         return verificarExistenciaBeneficiario(id);
     }
 
+
+
+
+
     public void verificarProyectoYPersona(Long idProyecto, String dpi){
         if(proyectoRepository.findById(idProyecto).isEmpty()){
             throw new validacionDeIntegridad("El proyecto no existe");
@@ -74,6 +89,7 @@ public class BeneficiarioService {
             throw new validacionDeIntegridad("La persona no existe");
         }
     }
+
 
 
     public void desactivarBeneficiario(Long id) {
@@ -88,4 +104,11 @@ public class BeneficiarioService {
         }
         return beneficiarioRepository.getReferenceById(id);
     }
+
+    public List<DatosDetalleBeneficiario> buscarPorNombreProyecto(String nombreProyecto, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return beneficiarioRepository.findByProyectoNombreContaining(nombreProyecto, pageRequest)
+                .map(DatosDetalleBeneficiario::new).getContent();
+    }
 }
+

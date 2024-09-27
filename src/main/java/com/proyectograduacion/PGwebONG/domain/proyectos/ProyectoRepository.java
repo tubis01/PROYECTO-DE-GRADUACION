@@ -5,7 +5,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.List;
 
 
 public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
@@ -16,7 +15,7 @@ public interface ProyectoRepository extends JpaRepository<Proyecto, Long> {
     @Query("select p.activo from Proyecto p where p.id = :idProyecto")
     Boolean findActivoById(Long idProyecto);
 
-    List<Proyecto> findByEstado(Estado estado);
+//    List<Proyecto> findByEstado(Estado estado);
 
     long countByEstado(Estado estado);
 }
