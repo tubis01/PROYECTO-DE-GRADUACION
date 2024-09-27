@@ -1,7 +1,4 @@
 package com.proyectograduacion.PGwebONG.domain.beneficiario;
-
-import com.jayway.jsonpath.JsonPath;
-import com.proyectograduacion.PGwebONG.domain.proyectos.Estado;
 import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
