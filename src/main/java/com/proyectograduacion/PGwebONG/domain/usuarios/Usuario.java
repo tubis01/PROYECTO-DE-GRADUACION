@@ -30,6 +30,9 @@ public class Usuario  {
 
     private String clave;
 
+    @Column(name = "tokenpassword")
+    private String tokenPassword;
+
     private boolean activo;
 
     @ManyToMany(fetch = FetchType.EAGER)

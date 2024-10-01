@@ -1,5 +1,6 @@
 package com.proyectograduacion.PGwebONG.domain.usuarios;
 
+import com.proyectograduacion.PGwebONG.emialPassword.dto.ChangePasswordDTO;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -7,17 +8,22 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository) {
+    public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository,
+                          BCryptPasswordEncoder cryptPasswordEncoder) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
+        this.bCryptPasswordEncoder = cryptPasswordEncoder;
     }
     /*
     * Método que lista los usuarios activos
@@ -68,6 +74,37 @@ public class UsuarioService {
         usuario.actualizarUsuario(datosActualizarUsuario, new BCryptPasswordEncoder());
         return usuario;
     }
+//TODO: implementacion de cambio de clave
+    public Optional<Usuario> getByNombreUsuarioOrEmail(String nameOrEmail){
+        return Optional.ofNullable(usuarioRepository.findByUsuarioOrEmail(nameOrEmail, nameOrEmail));
+    }
+
+    public Optional<Usuario> getByTokenPassword(String tokenPassword){
+        return usuarioRepository.findByTokenPassword(tokenPassword);
+    }
+
+    public String generarTokenPassword(Usuario usuario){
+        UUID uuid = UUID.randomUUID();
+        String tokenPassword = uuid.toString();
+        usuario.setTokenPassword(tokenPassword);
+        usuarioRepository.save(usuario);
+        return tokenPassword;
+    }
+
+    public boolean cambiarClave(ChangePasswordDTO dto){
+        Optional<Usuario> usuarioOpt = getByTokenPassword(dto.getTokenPassword());
+        if(usuarioOpt.isEmpty()){
+            return false;
+        }
+        Usuario usuario = usuarioOpt.get();
+        String nuveClave= bCryptPasswordEncoder.encode(dto.getPassword());
+        usuario.setClave(nuveClave);
+        usuario.setTokenPassword(null);
+        usuarioRepository.save(usuario);
+        return true;
+    }
+
+
 
     /*
     * Método que deshabilita un usuario
@@ -96,5 +133,9 @@ public class UsuarioService {
         if(usuarioRepository.existsByUsuario(usuario)){
             throw new validacionDeIntegridad("El usuario ya fue registrado");
         }
+    }
+
+    public void registrarUsuario(Usuario usuario) {
+        usuarioRepository.save(usuario);
     }
 }
