@@ -1,4 +1,10 @@
 package com.proyectograduacion.PGwebONG.infra.security;
 
-public record DatosJWTToken(String token) {
+import java.util.List;
+
+public record DatosJWTToken(
+        String token,
+        String userName,
+        List<String> roles
+) {
 }
