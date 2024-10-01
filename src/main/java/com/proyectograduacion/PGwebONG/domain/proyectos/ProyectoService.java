@@ -1,18 +1,28 @@
 package com.proyectograduacion.PGwebONG.domain.proyectos;
 
+import com.proyectograduacion.PGwebONG.domain.beneficiario.Beneficiario;
+import com.proyectograduacion.PGwebONG.domain.beneficiario.BeneficiarioRepository;
+import com.proyectograduacion.PGwebONG.domain.proyectos.validaciones.ValidadorProyectos;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProyectoService {
 
+    private final List<ValidadorProyectos> validadores;
     private final ProyectoRepository proyectoRepository;
+    private final BeneficiarioRepository beneficiarioRepository;
 
-    public ProyectoService(ProyectoRepository proyectoRepository) {
+    public ProyectoService(ProyectoRepository proyectoRepository, List<ValidadorProyectos> validadores, BeneficiarioRepository beneficiarioRepository) {
         this.proyectoRepository = proyectoRepository;
+        this.validadores = validadores;
+        this.beneficiarioRepository = beneficiarioRepository;
     }
+
     public Page<DatosDetalleProyecto> listarProyectos(Pageable pageable) {
         return proyectoRepository.findByActivoTrue(pageable)
                 .map(DatosDetalleProyecto::new);
@@ -36,14 +46,25 @@ public class ProyectoService {
     }
 
     public Proyecto registrarProyecto(DatosRegistroProyecto datosRegistroProyecto) {
+        validadores.forEach(validador -> validador.validar(datosRegistroProyecto));
         Proyecto newProyecto = new Proyecto(datosRegistroProyecto);
         proyectoRepository.save(newProyecto);
         return newProyecto;
     }
 
-    public void eliminarProyecto(Long id) {
+    public void finalizarProyecto(Long id) {
         Proyecto proyecto = verificarExistenciaProyecto(id);
-        proyecto.eliminarProyecto();
+        proyecto.finalizarProyecto();
         proyectoRepository.save(proyecto);
+
+//        desactivarBeneficiariosDeProyeto(proyecto);
     }
+
+    public void desactivarBeneficiariosDeProyeto(Proyecto proyecto){
+        List<Beneficiario> beneficiarios = beneficiarioRepository.findByProyecto(proyecto);
+        for (Beneficiario beneficiario : beneficiarios) {
+            beneficiario.desactivar();
+        }
+    }
+
 }

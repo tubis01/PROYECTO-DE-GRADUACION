@@ -26,7 +26,7 @@ public record DatosDetalleBeneficiario(
         String tipoProductor,
         String responsable,
         String organizacion,
-        String proyecto
+        String NombreProyecto
 ) {
     public DatosDetalleBeneficiario (Beneficiario beneficiario){
 

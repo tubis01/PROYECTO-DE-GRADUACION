@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @RestControllerAdvice
@@ -58,6 +59,10 @@ public class TratadorDeErrores {
         public ResponseEntity<String> handleException(Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
+    }
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<String> manejarErrorAccesoDenegado(AccessDeniedException e) {
+        return new ResponseEntity<>("Acceso denegado: " + e.getMessage(), HttpStatus.FORBIDDEN);
     }
 
 }

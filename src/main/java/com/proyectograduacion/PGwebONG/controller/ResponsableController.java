@@ -10,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,6 +29,11 @@ public class ResponsableController {
         this.responsableService = responsableService;
     }
 
+    /*
+    * Método que lista los donadores
+    *
+     */
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadores(Pageable pageable,
                                                                                             PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
@@ -43,6 +49,7 @@ public class ResponsableController {
         return ResponseEntity.ok(pagedModel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadoresInactivos(Pageable pageable,
                                                                                                  PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
@@ -57,6 +64,7 @@ public class ResponsableController {
         return ResponseEntity.ok(pagedModel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<DatosDetalleResponsable>> obtenerResponsablePorId(@PathVariable Long id) {
         Responsable responsable = responsableService.obtenerResponsablePorId(id);
@@ -71,6 +79,7 @@ public class ResponsableController {
         return ResponseEntity.ok(entityModel);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetalleResponsable> registrarResponsable(@RequestBody @Valid DatosRegistroResponsable datosRegistroResponsable,
                                                                         UriComponentsBuilder uriBuilder) {
@@ -82,6 +91,7 @@ public class ResponsableController {
         return ResponseEntity.created(uri).body(donadorDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/modificar")
     @Transactional
     public ResponseEntity<DatosDetalleResponsable> modificarResponsable(@RequestBody @Valid DatosActualizarResponsable datosActualizarResponsable) {
@@ -90,6 +100,7 @@ public class ResponsableController {
         return ResponseEntity.ok(donadorDTO);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{id}")
     @Transactional
     public ResponseEntity<Responsable> eliminarResponsable(@PathVariable Long id) {
@@ -97,6 +108,7 @@ public class ResponsableController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminarBD/{id}")
     @Transactional
     public ResponseEntity<Responsable> eliminarResponsableBD(@PathVariable Long id) {
@@ -104,6 +116,7 @@ public class ResponsableController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activar/{id}")
     @Transactional
     public ResponseEntity<Responsable> activarResponsable(@PathVariable Long id) {

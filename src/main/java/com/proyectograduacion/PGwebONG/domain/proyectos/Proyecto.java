@@ -43,7 +43,7 @@ public class Proyecto {
     }
 
 
-    public void eliminarProyecto() {
+    public void finalizarProyecto() {
         this.activo = false;
         this.estado = Estado.Finalizado;
     }

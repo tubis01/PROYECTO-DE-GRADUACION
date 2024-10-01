@@ -10,6 +10,7 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -29,10 +30,10 @@ public class PersonaController {
     }
 
 //    obtener lista de personas
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetallePersona>>> listarPersonas(Pageable pageable,
                                                                                        PagedResourcesAssembler<DatosDetallePersona> assembler) {
-
         // Obtener la página de datos
         Page<DatosDetallePersona> personas = personaService.listarPersonas(pageable);
 
@@ -41,12 +42,12 @@ public class PersonaController {
             Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(persona.DPI())).withRel("eliminar");
             return EntityModel.of(persona, selfLink, eliminarLink);
         });
-
         return ResponseEntity.ok(pagedModel);
 
     }
 
     //    listar personas inactivas
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetallePersona>>> listarPersonasInactivas(Pageable pageable,
                                                                                                 PagedResourcesAssembler<DatosDetallePersona> assembler){
@@ -63,8 +64,8 @@ public class PersonaController {
 
 //    obtener persona por dpi
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{dpi}")
-
     public ResponseEntity<EntityModel<DatosDetallePersona>> obtenerPersonaPorDPI(@PathVariable String dpi){
         Persona persona = personaService.obtenerPersonaPorDPI(dpi);
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
@@ -75,6 +76,7 @@ public class PersonaController {
 
 
 //    registrar persona
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetallePersona> registrarPersona(@RequestBody @Valid DatosRegistroPersona datosRegistroPersona,
                                                                 UriComponentsBuilder uriBuilder) {
@@ -86,6 +88,7 @@ public class PersonaController {
     }
 
 //    actualizar persona
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/modificar")
     @Transactional
     public ResponseEntity<DatosDetallePersona> modificarPersona(@RequestBody @Valid DatosActualizarPersona datosActualizarPersona) {
@@ -94,6 +97,7 @@ public class PersonaController {
     }
 
 //    elimininacinoLogica
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{dpi}")
     @Transactional
     public ResponseEntity<Persona> eliminarPersona(@PathVariable String dpi){
@@ -102,6 +106,7 @@ public class PersonaController {
     }
 
 //    eliminacion fisica
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/eliminarBD/{dpi}")
     @Transactional
     public ResponseEntity<Persona> eliminarPersonaBD(@PathVariable String dpi){
@@ -109,6 +114,7 @@ public class PersonaController {
         return ResponseEntity.noContent().build();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/activar/{dpi}")
     @Transactional
     public ResponseEntity<Persona> activarPersona(@PathVariable String dpi) {
