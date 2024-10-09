@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.domain.responsables;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.personas.Genero;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -16,7 +15,7 @@ public record DatosRegistroResponsable(
         @NotNull
         Genero genero,
         @NotNull
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         LocalDate fechaNacimiento,
         @NotBlank
         @Email

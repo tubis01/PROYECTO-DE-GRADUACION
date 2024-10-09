@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.direccion.CodigoUbicaciones;
 import com.proyectograduacion.PGwebONG.domain.direccion.DatosDireccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.DatosDiscapacidad;
@@ -12,22 +11,26 @@ import java.time.LocalDate;
 
 public record DatosRegistroPersona(
         @NotBlank
-        String dpi,
-        @NotBlank
+        String DPI,
+
         String NIT,
+
         @NotBlank
         String primerNombre,
-        @NotBlank
+
         String segundoNombre,
+
         String tercerNombre,
+
         @NotBlank
         String primerApellido,
-        @NotBlank
+
         String segundoApellido,
+
         @NotBlank
         String telefono,
         @NotNull
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         LocalDate fechaNacimiento,
         @NotBlank
         String etnia,
@@ -38,18 +41,22 @@ public record DatosRegistroPersona(
         String estadoCivil,
         @NotNull
         Integer numeroHijos,
+
         @Valid
         DatosDireccion direccion,
+
         @Valid
         DatosDiscapacidad discapacidad,
+
         @NotBlank
         String comunidadLinguistica,
+
         @NotBlank
         String area,
         @NotBlank
         String cultivo,
         @NotNull
-        boolean vendeExecedenteCosecha,
+        boolean vendeExcedenteCosecha,
         @NotNull
         TipoProductor tipoProductor,
         @NotNull

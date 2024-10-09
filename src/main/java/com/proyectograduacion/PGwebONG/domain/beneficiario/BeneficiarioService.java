@@ -42,41 +42,30 @@ public class BeneficiarioService {
                 .map(DatosDetalleBeneficiario::new);
     }
 
-//    public Page<DatosDetalleBeneficiario> buscarPorDpiParcial(String dpi, int page, int size){
-//        PageRequest pageRequest = PageRequest.of(page, size);
-//        return beneficiarioRepository.findByPersonaDpiContaining(dpi, pageRequest)
-//                .map(DatosDetalleBeneficiario::new);
-//    }
 
     public List<DatosDetalleBeneficiario> buscarPorDpiParcial(String dpi, int page, int limit){
         PageRequest pageRequest = PageRequest.of(page, limit);
         return beneficiarioRepository.findByPersonaDpiContaining(dpi, pageRequest)
                 .map(DatosDetalleBeneficiario::new).getContent();
     }
-    @Transactional
-    public Beneficiario registrarBeneficiario(DatosregistroBeneficiario datosregistroBeneficiario){
 
+        @Transactional
+        public Beneficiario registrarBeneficiario(DatosregistroBeneficiario datosregistroBeneficiario){
 
-        verificarProyectoYPersona(datosregistroBeneficiario.proyecto(), datosregistroBeneficiario.dpi());
+            verificarProyectoYPersona(datosregistroBeneficiario.proyecto(), datosregistroBeneficiario.dpi());
+            validadores.forEach(validador -> validador.validar(datosregistroBeneficiario));
 
-        validadores.forEach(validador -> validador.validar(datosregistroBeneficiario));
+            Persona persona = personaService.obtenerPersonaPorDPI(datosregistroBeneficiario.dpi());
+            Proyecto proyecto = proyectoService.obtenerProyectoPorId(datosregistroBeneficiario.proyecto());
 
-        Persona persona = personaService.obtenerPersonaPorDPI(datosregistroBeneficiario.dpi());
-        Proyecto proyecto = proyectoService.obtenerProyectoPorId(datosregistroBeneficiario.proyecto());
-
-
-        Beneficiario beneficiario = new Beneficiario(persona, proyecto);
-        beneficiarioRepository.save(beneficiario);
-        return beneficiario;
-    }
+            Beneficiario beneficiario = new Beneficiario(persona, proyecto);
+            beneficiarioRepository.save(beneficiario);
+            return beneficiario;
+        }
 
     public Beneficiario obtenerBeneficiarioPorId(Long id) {
         return verificarExistenciaBeneficiario(id);
     }
-
-
-
-
 
     public void verificarProyectoYPersona(Long idProyecto, String dpi){
         if(proyectoRepository.findById(idProyecto).isEmpty()){

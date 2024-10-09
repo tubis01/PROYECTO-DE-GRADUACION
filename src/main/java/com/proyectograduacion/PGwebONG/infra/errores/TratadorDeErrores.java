@@ -1,12 +1,10 @@
 package com.proyectograduacion.PGwebONG.infra.errores;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ValidationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -15,11 +13,6 @@ import java.util.List;
 
 @RestControllerAdvice
 public class TratadorDeErrores {
-
-    @ExceptionHandler(EntityNotFoundException.class)
-    public ResponseEntity<Void> manejarError404() {
-        return ResponseEntity.notFound().build();
-    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<DatosErrorValidacion>> manejarError400(MethodArgumentNotValidException e) {
@@ -31,8 +24,22 @@ public class TratadorDeErrores {
 
     @ExceptionHandler(validacionDeIntegridad.class)
     public ResponseEntity<String> manejarErrorValidacionDeIntegridad(validacionDeIntegridad e) {
+        if (e.getMessage().contains("No existe")) {
+            // Cuando la persona no se encuentra (404 Not Found)
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } else if (e.getMessage().contains("Ya existe")) {
+            // Cuando hay un conflicto de registro (409 Conflict)
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
+        }
+        // Para otros casos, podría ser un bad request genérico (400 Bad Request)
         return ResponseEntity.badRequest().body(e.getMessage());
     }
+
+//    @ExceptionHandler(PersonaNoEcontradaException.class)
+//    public ResponseEntity<String> manejarErrorPersonaNoEncontrada(PersonaNoEcontradaException e) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+//    }
+
 
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<String> manejarErrorValidacionDeNegocio(ValidationException e) {
@@ -53,16 +60,17 @@ public class TratadorDeErrores {
     public ResponseEntity<String> manejarErrorMensajeNoLegible(HttpMessageNotReadableException e) {
         return ResponseEntity.badRequest().body("Mensaje no legible: " + e.getMessage());
     }
-    @ControllerAdvice
-    public static class GlobalExceptionHandler {
-        @ExceptionHandler(Exception.class)
-        public ResponseEntity<String> handleException(Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
-        }
-    }
+
+//    @ControllerAdvice
+//    public static class GlobalExceptionHandler {
+//        @ExceptionHandler(Exception.class)
+//        public ResponseEntity<String> handleException(Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+//        }
+//    }
+
     @ExceptionHandler(AccessDeniedException.class)
     public ResponseEntity<String> manejarErrorAccesoDenegado(AccessDeniedException e) {
         return new ResponseEntity<>("Acceso denegado: " + e.getMessage(), HttpStatus.FORBIDDEN);
     }
-
 }

@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public record DatosActualizarPersona(
         @NotBlank
-        String dpi,
+        String DPI,
         String NIT,
         String primerNombre,
         String segundoNombre,
@@ -16,6 +16,7 @@ public record DatosActualizarPersona(
         String primerApellido,
         String segundoApellido,
         String telefono,
+//        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         LocalDate fechaNacimiento,
         String etnia,
         Genero genero,

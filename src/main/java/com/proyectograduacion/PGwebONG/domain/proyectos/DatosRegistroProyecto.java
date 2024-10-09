@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.domain.proyectos;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,9 +12,9 @@ public record DatosRegistroProyecto
                 @NotBlank
                 String descripcion,
                 @NotNull
-                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+//                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
                 LocalDate fechaInicio,
-                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+//                @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
                 LocalDate fechaFin
         ) {
 }

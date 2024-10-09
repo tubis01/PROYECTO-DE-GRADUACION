@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+
 @Service
 public class ResponsableService {
 
@@ -13,7 +14,7 @@ public class ResponsableService {
     public ResponsableService(ResponsableRepository responsableRepository) {
         this.responsableRepository = responsableRepository;
     }
-    
+
     
     public Page<DatosDetalleResponsable> listarResponsablesActivos(Pageable pageable) {
         return responsableRepository.findByActivoTrue(pageable)
@@ -71,10 +72,10 @@ public class ResponsableService {
 
     private void validarCorreoTelefono(DatosRegistroResponsable datosRegistroDonador) {
         if(responsableRepository.existsByCorreo(datosRegistroDonador.correo())){
-            throw new validacionDeIntegridad("El correo ya fue registrado");
+            throw new validacionDeIntegridad("Ya existe el correo proporcionado");
         }
         if(responsableRepository.existsByTelefono(datosRegistroDonador.telefono())){
-            throw new validacionDeIntegridad ("El telefono ya fue registrado");
+            throw new validacionDeIntegridad ("Ya existe el teléfono proporcionado");
         }
     }
 }

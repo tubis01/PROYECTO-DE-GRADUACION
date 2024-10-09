@@ -70,7 +70,7 @@ public class UsuarioService {
     * Método que modifica un usuario
      */
     public Usuario actualizarUsuario(DatosActualizarUsuario datosActualizarUsuario){
-        Usuario usuario = verificarExistenciaUsuario(datosActualizarUsuario.id());
+        Usuario usuario = verificarExistenciaUsuario(datosActualizarUsuario.dpi());
         usuario.actualizarUsuario(datosActualizarUsuario, new BCryptPasswordEncoder());
         return usuario;
     }
@@ -110,6 +110,7 @@ public class UsuarioService {
     * Método que deshabilita un usuario
      */
     public void deshabilitarUsuario(Long id){
+        System.out.println("iassssssssssssssssssssssssssssssssssfasdd: "+id);
         Usuario usuario = verificarExistenciaUsuario(id);
         usuario.deshabilitarUsuario();
     }

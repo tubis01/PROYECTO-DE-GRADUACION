@@ -23,6 +23,6 @@ public class Discapacidad {
     public Discapacidad(DatosDiscapacidad discapacidad) {
         this.discapacidadAuditiva = discapacidad.discapacidadAuditiva();
         this.discapacidadMotora = discapacidad.discapacidadMotora();
-        this.dicapacidadIntelectual = discapacidad.dicapacidadIntelectual();
+        this.dicapacidadIntelectual = discapacidad.discapacidadIntelectual();
     }
 }

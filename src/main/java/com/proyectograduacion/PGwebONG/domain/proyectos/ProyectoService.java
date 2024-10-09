@@ -39,10 +39,8 @@ public class ProyectoService {
     }
 
     private Proyecto verificarExistenciaProyecto(Long id) {
-        if (!proyectoRepository.existsById(id)) {
-            throw new validacionDeIntegridad("No existe un proyecto con el id proporcionado");
-        }
-        return proyectoRepository.getReferenceById(id);
+        return proyectoRepository.findById(id)
+                .orElseThrow(() -> new validacionDeIntegridad("No existe el proyecto con id: " + id));
     }
 
     public Proyecto registrarProyecto(DatosRegistroProyecto datosRegistroProyecto) {
@@ -67,4 +65,10 @@ public class ProyectoService {
         }
     }
 
+    public Proyecto modificarProyecto(DatosActualizarProyecto actualizarProyecto) {
+        Proyecto proyecto = verificarExistenciaProyecto(actualizarProyecto.id());
+        proyecto.actualizarProyecto(actualizarProyecto);
+        proyectoRepository.save(proyecto);
+        return proyecto;
+    }
 }

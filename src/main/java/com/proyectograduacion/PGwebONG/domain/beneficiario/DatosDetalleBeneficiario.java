@@ -6,7 +6,7 @@ import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
 public record DatosDetalleBeneficiario(
 
         Long id,
-        String dpi,
+        String DPI,
         String primerNombre,
         String segundoNombre,
         String primerApellido,
@@ -26,6 +26,7 @@ public record DatosDetalleBeneficiario(
         String tipoProductor,
         String responsable,
         String organizacion,
+        Long idProyecto,
         String NombreProyecto
 ) {
     public DatosDetalleBeneficiario (Beneficiario beneficiario){
@@ -52,6 +53,7 @@ public record DatosDetalleBeneficiario(
                 beneficiario.getPersona().getTipoProductor().toString(),
                 beneficiario.getPersona().getResponsable().getNombre(),
                 beneficiario.getPersona().getOrganizacion().toString(),
+                beneficiario.getProyecto().getId(),
                 beneficiario.getProyecto().getNombre()
 
 

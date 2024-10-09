@@ -47,4 +47,21 @@ public class Proyecto {
         this.activo = false;
         this.estado = Estado.Finalizado;
     }
+
+    public void actualizarProyecto(DatosActualizarProyecto actualizarProyecto) {
+
+        if(actualizarProyecto.nombre() != null){
+            this.nombre = actualizarProyecto.nombre();
+        }
+        if(actualizarProyecto.descripcion() != null){
+            this.descripcion = actualizarProyecto.descripcion();
+        }
+        if(actualizarProyecto.fechaInicio() != null){
+            this.fechaInicio = actualizarProyecto.fechaInicio();
+        }
+        if(actualizarProyecto.fechaFin() != null){
+            this.fechaFin = actualizarProyecto.fechaFin();
+        }
+
+    }
 }

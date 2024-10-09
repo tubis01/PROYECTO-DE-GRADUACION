@@ -49,6 +49,7 @@ public class ResponsableController {
         return ResponseEntity.ok(pagedModel);
     }
 
+
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadoresInactivos(Pageable pageable,

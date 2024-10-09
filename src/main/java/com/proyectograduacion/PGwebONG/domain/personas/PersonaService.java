@@ -48,7 +48,7 @@ public class PersonaService {
 
 
     public DatosDetallePersona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
-        Persona persona = verificarExistencia(datosActualizarPersona.dpi());
+        Persona persona = verificarExistencia(datosActualizarPersona.DPI());
         Responsable responsable = datosActualizarPersona.responsable() != null ?
                 validarResponsable(Long.valueOf(datosActualizarPersona.responsable())) : persona.getResponsable();
         persona.actualizarPersona(datosActualizarPersona, responsable);
@@ -86,14 +86,18 @@ public class PersonaService {
 
 
     private void validarUnicidadPersona(DatosRegistroPersona datosRegistroPersona) {
-        if (personaRepository.existsByDpi(datosRegistroPersona.dpi())) {
-            throw new validacionDeIntegridad("El DPI ya fue registrado");
+        if (personaRepository.existsByDpi(datosRegistroPersona.DPI())) {
+            throw new validacionDeIntegridad("Ya existe una persona con ese DPI.");
         }
-        if (personaRepository.existsByNIT(datosRegistroPersona.NIT())) {
-            throw new validacionDeIntegridad("El NIT ya fue registrado");
+        if (datosRegistroPersona.NIT() != null && !datosRegistroPersona.NIT().isEmpty()) {
+            // Verificar si el NIT ya existe solo si no está vacío o nulo
+            if (personaRepository.existsByNIT(datosRegistroPersona.NIT())) {
+                throw new validacionDeIntegridad("Ya existe una persona con ese NIT.");
+            }
         }
+
         if (personaRepository.existsByTelefono(datosRegistroPersona.telefono())) {
-            throw new validacionDeIntegridad("El telefono ya fue registrado");
+            throw new validacionDeIntegridad("Ya existe el teléfono registrado");
         }
     }
 

@@ -28,5 +28,4 @@ public class Rol {
     private Set<Usuario> usuarios = new HashSet<>();
 
 
-
 }

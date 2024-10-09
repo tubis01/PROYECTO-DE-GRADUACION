@@ -1,9 +1,6 @@
 package com.proyectograduacion.PGwebONG.controller;
 
-import com.proyectograduacion.PGwebONG.domain.proyectos.DatosDetalleProyecto;
-import com.proyectograduacion.PGwebONG.domain.proyectos.DatosRegistroProyecto;
-import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
-import com.proyectograduacion.PGwebONG.domain.proyectos.ProyectoService;
+import com.proyectograduacion.PGwebONG.domain.proyectos.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -105,8 +102,16 @@ public class ProyectoController {
         DatosDetalleProyecto proyectoDTO = new DatosDetalleProyecto(proyecto);
         URI uri = uriComponentsBuilder.path("/proyectos/{id}").buildAndExpand(proyectoDTO.id()).toUri();
         return ResponseEntity.created(uri).body(EntityModel.of(proyectoDTO));
-
     }
+
+    @PutMapping("/modificar")
+    @Transactional
+    public ResponseEntity<DatosDetalleProyecto> modificarProyecto(@RequestBody @Valid DatosActualizarProyecto datosRegistroProyecto) {
+        Proyecto proyecto = proyectoService.modificarProyecto(datosRegistroProyecto);
+        DatosDetalleProyecto proyectoDTO = new DatosDetalleProyecto(proyecto);
+        return ResponseEntity.ok(proyectoDTO);
+    }
+
 
     /**
      * Elimina un proyecto.

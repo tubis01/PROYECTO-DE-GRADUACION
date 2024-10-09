@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.proyectograduacion.PGwebONG.domain.direccion.Direccion;
 import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
 
@@ -15,7 +14,7 @@ public record DatosDetallePersona(
                                   String primerApellido,
                                   String segundoApellido,
                                   String telefono,
-                                  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
+//                                  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
                                   LocalDate fechaNacimiento,
                                   String etnia,
                                   Genero genero,
@@ -28,6 +27,7 @@ public record DatosDetallePersona(
                                   String cultivo,
                                   boolean vendeExecedenteCosecha,
                                   TipoProductor tipoProductor,
+                                  Long idResponsable,
                                   String responsable,
                                   Organizacion organizacion,
                                   String tipoVivienda
@@ -54,6 +54,7 @@ public record DatosDetallePersona(
                 persona.getCultivo(),
                 persona.isVendeExecedenteCosecha(),
                 persona.getTipoProductor(),
+                persona.getResponsable().getId(),
                 persona.getResponsable().getNombre(),
                 persona.getOrganizacion(),
                 persona.getTipoVivienda()

@@ -78,7 +78,7 @@ public class Persona  {
 
     // Constructor que usa DatosRegistroPersona
     public Persona(DatosRegistroPersona registroPersona, Responsable responsable) {
-        this.dpi = registroPersona.dpi();
+        this.dpi = registroPersona.DPI();
         this.primerNombre = registroPersona.primerNombre();
         this.segundoNombre = registroPersona.segundoNombre();
         this.tercerNombre = registroPersona.tercerNombre();
@@ -97,7 +97,7 @@ public class Persona  {
         this.comunidadLinguistica = registroPersona.comunidadLinguistica();
         this.area = registroPersona.area();
         this.cultivo = registroPersona.cultivo();
-        this.vendeExecedenteCosecha = registroPersona.vendeExecedenteCosecha();
+        this.vendeExecedenteCosecha = registroPersona.vendeExcedenteCosecha();
         this.tipoProductor = registroPersona.tipoProductor();
         this.responsable = responsable;
         this.organizacion = registroPersona.organizacion();

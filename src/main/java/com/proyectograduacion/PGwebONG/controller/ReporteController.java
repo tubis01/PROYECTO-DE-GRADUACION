@@ -1,12 +1,17 @@
 package com.proyectograduacion.PGwebONG.controller;
 
+import com.proyectograduacion.PGwebONG.domain.proyectos.DatosDetalleProyecto;
 import com.proyectograduacion.PGwebONG.domain.proyectos.Estado;
+import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
 import com.proyectograduacion.PGwebONG.service.ReporteService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @RestController
@@ -37,5 +42,15 @@ public class ReporteController {
     public ResponseEntity<Long> reporteBeneficiariosPorMes(@RequestParam int mes) {
         return ResponseEntity.ok(reporteService.contarBeneficiariosPorMes(mes));
     }
+
+    @GetMapping("/ultimos-proyectos-finalizados")
+    public ResponseEntity<List<DatosDetalleProyecto>> obtenerUltimosProyectosFinalizados() {
+        List<Proyecto> proyectos = reporteService.obtenerUltimosProyectosFinalizados(5); // Limitar a 5 proyectos
+        List<DatosDetalleProyecto> datosProyectos = proyectos.stream()
+                .map(DatosDetalleProyecto::new)
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(datosProyectos);
+    }
+
 
 }

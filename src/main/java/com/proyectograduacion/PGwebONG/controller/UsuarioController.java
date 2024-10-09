@@ -1,6 +1,7 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.domain.usuarios.*;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -100,7 +101,8 @@ public class UsuarioController {
      */
 
     @PreAuthorize("hasRole('ADMIN')")
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/deshabilitar/{id}")
+    @Transactional
     public ResponseEntity<Object> deshabilitarUsuario(@PathVariable Long id){
         usuarioService.deshabilitarUsuario(id);
         return ResponseEntity.noContent().build();
