@@ -57,6 +57,7 @@ public class BeneficiarioController {
     * @return ResponseEntity con el beneficiario registrado
      */
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DIGITADOR')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetalleBeneficiario> registrarBeneficiario
             (@RequestBody @Valid DatosregistroBeneficiario datosRegistroBeneficiario,
