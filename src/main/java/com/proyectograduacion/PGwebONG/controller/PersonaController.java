@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -65,7 +66,7 @@ public class PersonaController {
 //    obtener persona por dpi
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/{dpi}")
+    @GetMapping("/buscar/{dpi}")
     public ResponseEntity<EntityModel<DatosDetallePersona>> obtenerPersonaPorDPI(@PathVariable String dpi){
         Persona persona = personaService.obtenerPersonaPorDPI(dpi);
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
@@ -73,6 +74,17 @@ public class PersonaController {
         Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(dpi)).withRel("eliminar");
         return ResponseEntity.ok(EntityModel.of(personaDTO, selfLink, eliminarLink));
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/buscarDpiParcial")
+    public ResponseEntity<List<DatosDetallePersona>> buscarPorDpiParcial(
+            @RequestParam String dpi,
+            @RequestParam int page,
+            @RequestParam int size){
+        List<DatosDetallePersona> beneficiarios = personaService.buscarPorDpiParcial(dpi, page, size);
+        return ResponseEntity.ok(beneficiarios);
+    }
+
 
 
 //    registrar persona

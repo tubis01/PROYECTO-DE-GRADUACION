@@ -70,7 +70,7 @@ public class UsuarioService {
     * Método que modifica un usuario
      */
     public Usuario actualizarUsuario(DatosActualizarUsuario datosActualizarUsuario){
-        Usuario usuario = verificarExistenciaUsuario(datosActualizarUsuario.dpi());
+        Usuario usuario = verificarExistenciaUsuario(datosActualizarUsuario.id());
         usuario.actualizarUsuario(datosActualizarUsuario, new BCryptPasswordEncoder());
         return usuario;
     }
@@ -104,13 +104,7 @@ public class UsuarioService {
         return true;
     }
 
-
-
-    /*
-    * Método que deshabilita un usuario
-     */
     public void deshabilitarUsuario(Long id){
-        System.out.println("iassssssssssssssssssssssssssssssssssfasdd: "+id);
         Usuario usuario = verificarExistenciaUsuario(id);
         usuario.deshabilitarUsuario();
     }
@@ -122,21 +116,19 @@ public class UsuarioService {
 
     private Usuario verificarExistenciaUsuario(Long id) {
         if(!usuarioRepository.existsById(id)){
-            throw new validacionDeIntegridad("El usuario no existe");
+            throw new validacionDeIntegridad("No existe el usuario");
         }
         return usuarioRepository.getReferenceById(id);
     }
 //    verificar usuario e email
     private void verificarUsuarioYEmail(String usuario, String email){
         if(usuarioRepository.existsByEmail(email)){
-            throw new validacionDeIntegridad("El correo ya fue registrado");
+            throw new validacionDeIntegridad("Ya existe el email, por favor ingrese otro");
         }
         if(usuarioRepository.existsByUsuario(usuario)){
-            throw new validacionDeIntegridad("El usuario ya fue registrado");
+            throw new validacionDeIntegridad("Ya existe un usuario con ese nombre, por favor ingrese otro");
         }
     }
 
-    public void registrarUsuario(Usuario usuario) {
-        usuarioRepository.save(usuario);
-    }
+
 }

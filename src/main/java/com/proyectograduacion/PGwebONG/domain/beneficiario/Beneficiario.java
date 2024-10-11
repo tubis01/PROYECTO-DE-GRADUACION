@@ -46,4 +46,9 @@ public class Beneficiario {
     public void desactivar() {
         this.activo = false;
     }
+
+    public void actualizarBeneficiario(Proyecto proyecto) {
+        this.proyecto = proyecto;
+
+    }
 }

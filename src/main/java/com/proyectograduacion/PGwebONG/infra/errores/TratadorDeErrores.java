@@ -30,15 +30,14 @@ public class TratadorDeErrores {
         } else if (e.getMessage().contains("Ya existe")) {
             // Cuando hay un conflicto de registro (409 Conflict)
             return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        }
+        } else if (e.getMessage().contains("inactivos")) {
+        // Cuando se intenta registrar un beneficiario inactivo (400 Bad Request)
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Error: " + e.getMessage());
+    }
         // Para otros casos, podría ser un bad request genérico (400 Bad Request)
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
-//    @ExceptionHandler(PersonaNoEcontradaException.class)
-//    public ResponseEntity<String> manejarErrorPersonaNoEncontrada(PersonaNoEcontradaException e) {
-//        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
-//    }
 
 
     @ExceptionHandler(ValidationException.class)

@@ -91,6 +91,7 @@ public class UsuarioController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/actualizar")
+    @Transactional
     public ResponseEntity<DatosDetalleUsuario> actualizarUsuario(@RequestBody @Valid DatosActualizarUsuario datos){
         Usuario usuario = usuarioService.actualizarUsuario(datos);
         return ResponseEntity.ok(new DatosDetalleUsuario(usuario));

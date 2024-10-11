@@ -11,10 +11,10 @@ import java.util.stream.Collectors;
 
 @Getter
 public class UsuarioPrincipal implements UserDetails {
-    private String  email;
-    private String usuario;
-    private String password;
-    private Collection<? extends GrantedAuthority> authorities;
+    private final String  email;
+    private final String usuario;
+    private final String password;
+    private final Collection<? extends GrantedAuthority> authorities;
 
     public UsuarioPrincipal(String email, String usuario, String password, Collection<? extends GrantedAuthority> authorities) {
         this.email = email;

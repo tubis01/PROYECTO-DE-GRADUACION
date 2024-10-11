@@ -1,6 +1,7 @@
 package com.proyectograduacion.PGwebONG.domain.proyectos;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.proyectograduacion.PGwebONG.domain.beneficiario.Beneficiario;
 
 public record DatosDetalleProyecto(
         Long id,
@@ -23,4 +24,5 @@ public record DatosDetalleProyecto(
             );
 
         }
+
 }

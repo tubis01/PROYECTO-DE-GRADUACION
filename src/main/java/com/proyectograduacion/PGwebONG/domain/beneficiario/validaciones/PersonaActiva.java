@@ -2,6 +2,7 @@ package com.proyectograduacion.PGwebONG.domain.beneficiario.validaciones;
 
 import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosregistroBeneficiario;
 import com.proyectograduacion.PGwebONG.domain.personas.PersonaRepository;
+import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import jakarta.validation.ValidationException;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,7 @@ public class PersonaActiva implements IValidadorBeneficiario{
         Boolean personaActiva =  personaRepository.findActivoByDpi(datosregistroBeneficiario.dpi());
 
         if (!personaActiva) {
-            throw new ValidationException("No se puede permitir registrar beneficiarios inactivos");
+            throw new validacionDeIntegridad("No se puede permitir registrar beneficiarios inactivos");
         }
     }
 }

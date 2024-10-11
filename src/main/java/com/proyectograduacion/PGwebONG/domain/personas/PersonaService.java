@@ -1,11 +1,15 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
+import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosDetalleBeneficiario;
 import com.proyectograduacion.PGwebONG.domain.responsables.Responsable;
 import com.proyectograduacion.PGwebONG.domain.responsables.ResponsableRepository;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PersonaService {
@@ -101,4 +105,9 @@ public class PersonaService {
         }
     }
 
+    public List<DatosDetallePersona> buscarPorDpiParcial(String dpi, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return personaRepository.findByDpiContaining(dpi, pageRequest)
+                .map(DatosDetallePersona::new).getContent();
+    }
 }

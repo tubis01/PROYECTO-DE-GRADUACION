@@ -1,9 +1,6 @@
 package com.proyectograduacion.PGwebONG.controller;
 
-import com.proyectograduacion.PGwebONG.domain.beneficiario.Beneficiario;
-import com.proyectograduacion.PGwebONG.domain.beneficiario.BeneficiarioService;
-import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosDetalleBeneficiario;
-import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosregistroBeneficiario;
+import com.proyectograduacion.PGwebONG.domain.beneficiario.*;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -68,6 +65,12 @@ public class BeneficiarioController {
         DatosDetalleBeneficiario beneficiarioDTO = new DatosDetalleBeneficiario(beneficiario);
         URI uri = uriBuilder.path("/beneficiarios/{id}").buildAndExpand(beneficiarioDTO.id()).toUri();
         return ResponseEntity.created(uri).body(beneficiarioDTO);
+    }
+
+    @PutMapping("/modificar")
+    public ResponseEntity<DatosDetalleBeneficiario> modificarBeneficiario(@RequestBody @Valid DatosModificarBeneficiario datosActualizarBeneficiario){
+        DatosDetalleBeneficiario beneficiario = beneficiarioService.modificarBeneficiario(datosActualizarBeneficiario);
+        return ResponseEntity.ok(beneficiario);
     }
 
 

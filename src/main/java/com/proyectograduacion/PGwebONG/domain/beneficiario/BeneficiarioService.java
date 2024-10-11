@@ -38,6 +38,8 @@ public class BeneficiarioService {
     }
 
     public Page<DatosDetalleBeneficiario> listarBeneficiarios(Pageable pageable) {
+
+        System.out.println("Listando beneficiarios");
         return beneficiarioRepository.findByActivoTrue(pageable)
                 .map(DatosDetalleBeneficiario::new);
     }
@@ -63,6 +65,25 @@ public class BeneficiarioService {
             return beneficiario;
         }
 
+    public DatosDetalleBeneficiario modificarBeneficiario(DatosModificarBeneficiario datosActualizarBeneficiario) {
+        verificarProyectoYPersona(datosActualizarBeneficiario.proyecto(), datosActualizarBeneficiario.dpi());
+
+        Persona persona = personaService.obtenerPersonaPorDPI(datosActualizarBeneficiario.dpi());
+        Proyecto proyecto = proyectoService.obtenerProyectoPorId(datosActualizarBeneficiario.proyecto());
+
+        // Validar que el nuevo proyecto esté activo
+        if (!proyecto.isActivo()) {
+            throw new validacionDeIntegridad("No se puede asignar un proyecto inactivo");
+        }
+
+        Beneficiario beneficiario = verificarExistenciaBeneficiario(datosActualizarBeneficiario.id());
+
+        // Solo actualiza el proyecto, los demás campos no son modificables
+        beneficiario.actualizarBeneficiario(proyecto);
+        beneficiarioRepository.save(beneficiario);
+
+        return new DatosDetalleBeneficiario(beneficiario);
+    }
     public Beneficiario obtenerBeneficiarioPorId(Long id) {
         return verificarExistenciaBeneficiario(id);
     }
@@ -72,7 +93,7 @@ public class BeneficiarioService {
             throw new validacionDeIntegridad("El proyecto no existe");
         }
         if(!personaRepository.existsByDpi(dpi)){
-            throw new validacionDeIntegridad("La persona no existe");
+            throw new validacionDeIntegridad("No existe la persona Con el DPI proporcionado");
         }
     }
 
@@ -96,5 +117,7 @@ public class BeneficiarioService {
         return beneficiarioRepository.findByProyectoNombreContaining(nombreProyecto, pageRequest)
                 .map(DatosDetalleBeneficiario::new).getContent();
     }
+
+
 }
 

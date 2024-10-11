@@ -5,6 +5,7 @@ import com.proyectograduacion.PGwebONG.domain.beneficiario.BeneficiarioRepositor
 import com.proyectograduacion.PGwebONG.domain.proyectos.validaciones.ValidadorProyectos;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -70,5 +71,11 @@ public class ProyectoService {
         proyecto.actualizarProyecto(actualizarProyecto);
         proyectoRepository.save(proyecto);
         return proyecto;
+    }
+
+    public List<DatosDetalleProyecto> buscarPorDpiParcial(String dpi, int page, int size) {
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return proyectoRepository.findByProyectoContaining(dpi, pageRequest)
+                .map(DatosDetalleProyecto::new).getContent();
     }
 }
