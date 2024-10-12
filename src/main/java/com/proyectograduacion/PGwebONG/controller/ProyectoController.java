@@ -38,7 +38,7 @@ public class ProyectoController {
      * @return ResponseEntity con la lista de proyectos.
      */
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('DIGITADOR') or hasRole('USER')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectos(Pageable pageable,
                                                                    PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
@@ -52,7 +52,7 @@ public class ProyectoController {
         return ResponseEntity.ok(pagedModel);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/buscarPorNombre")
     public ResponseEntity<List<DatosDetalleProyecto>> buscarPorDpiParcial(
             @RequestParam String term,

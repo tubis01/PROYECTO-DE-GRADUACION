@@ -31,7 +31,7 @@ public class PersonaController {
     }
 
 //    obtener lista de personas
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetallePersona>>> listarPersonas(Pageable pageable,
                                                                                        PagedResourcesAssembler<DatosDetallePersona> assembler) {
@@ -75,7 +75,7 @@ public class PersonaController {
         return ResponseEntity.ok(EntityModel.of(personaDTO, selfLink, eliminarLink));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/buscarDpiParcial")
     public ResponseEntity<List<DatosDetallePersona>> buscarPorDpiParcial(
             @RequestParam String dpi,

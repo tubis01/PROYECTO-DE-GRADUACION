@@ -57,11 +57,12 @@ public class UsuarioService {
         Usuario usuario = new Usuario(datosRegistroUsuario, new BCryptPasswordEncoder());
 
         Set<Rol> roles = new HashSet<>();
-        roles.add(rolRepository.findByNombre(RolNombre.ROLE_USER));
         if(datosRegistroUsuario.rol().contains("admin")){
             roles.add(rolRepository.findByNombre(RolNombre.ROLE_ADMIN));
         } else if (datosRegistroUsuario.rol().contains("digitador")) {
             roles.add(rolRepository.findByNombre(RolNombre.ROLE_DIGITADOR));
+        }else if (datosRegistroUsuario.rol().contains("user")) {
+            roles.add(rolRepository.findByNombre(RolNombre.ROLE_USER));
         }
         usuario.setRoles(roles);
         usuarioRepository.save(usuario);

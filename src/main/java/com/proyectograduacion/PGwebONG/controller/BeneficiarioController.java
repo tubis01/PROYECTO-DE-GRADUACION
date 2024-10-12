@@ -36,7 +36,7 @@ public class BeneficiarioController {
      * @param assembler Ensamblador de recursos paginados.
      * @return ResponseEntity con la lista de proyectos.
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')" )
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleBeneficiario>>> listarPersonas(Pageable pageable,
                                                                                             PagedResourcesAssembler<DatosDetalleBeneficiario> assembler) {
@@ -74,7 +74,6 @@ public class BeneficiarioController {
         return ResponseEntity.ok(beneficiario);
     }
 
-
     /**
      * Método que obtiene un beneficiario por su id
      * @param id Id del beneficiario a obtener
@@ -94,7 +93,7 @@ public class BeneficiarioController {
      * @param size Tamaño de la página
      * @return ResponseEntity con la página de beneficiarios encontrados
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/buscarDpiParcial")
     public ResponseEntity<List<DatosDetalleBeneficiario>> buscarPorDpiParcial(
             @RequestParam String dpi,

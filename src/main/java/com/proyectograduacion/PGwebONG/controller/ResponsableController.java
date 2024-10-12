@@ -33,7 +33,7 @@ public class ResponsableController {
     * Método que lista los donadores
     *
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadores(Pageable pageable,
                                                                                             PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
