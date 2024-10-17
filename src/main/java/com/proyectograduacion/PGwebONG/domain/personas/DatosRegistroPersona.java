@@ -27,6 +27,8 @@ public record DatosRegistroPersona(
 
         String segundoApellido,
 
+        String apellidoCasada,
+
         @NotBlank
         String telefono,
         @NotNull
@@ -63,7 +65,7 @@ public record DatosRegistroPersona(
         Long responsable,
         @NotNull
         Organizacion organizacion,
-        @NotBlank
+
         String tipoVivienda
 ) {
     public CodigoUbicaciones obtenerCodigoUbicacion() {

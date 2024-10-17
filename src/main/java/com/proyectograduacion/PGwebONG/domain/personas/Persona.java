@@ -33,6 +33,8 @@ public class Persona  {
     private String tercerNombre;
     private String primerApellido;
     private String segundoApellido;
+    @Column(name = "apellidodecasada")
+    private String apellidoCasada;
 
     @Column(unique = true)
     private String NIT;
@@ -84,6 +86,7 @@ public class Persona  {
         this.tercerNombre = registroPersona.tercerNombre();
         this.primerApellido = registroPersona.primerApellido();
         this.segundoApellido = registroPersona.segundoApellido();
+        this.apellidoCasada = registroPersona.apellidoCasada();
         this.NIT = registroPersona.NIT();
         this.telefono = registroPersona.telefono();
         this.fechaNacimiento = registroPersona.fechaNacimiento();
@@ -123,6 +126,9 @@ public class Persona  {
         }
         if(datosActualizarPersona.segundoApellido() != null) {
             this.segundoApellido = datosActualizarPersona.segundoApellido();
+        }
+        if(datosActualizarPersona.apellidoCasada()!= null) {
+            this.apellidoCasada = datosActualizarPersona.apellidoCasada();
         }
         if(datosActualizarPersona.telefono() != null) {
             this.telefono = datosActualizarPersona.telefono();

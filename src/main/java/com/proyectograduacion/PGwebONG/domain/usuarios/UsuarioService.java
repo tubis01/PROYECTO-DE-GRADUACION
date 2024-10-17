@@ -63,6 +63,8 @@ public class UsuarioService {
             roles.add(rolRepository.findByNombre(RolNombre.ROLE_DIGITADOR));
         }else if (datosRegistroUsuario.rol().contains("user")) {
             roles.add(rolRepository.findByNombre(RolNombre.ROLE_USER));
+        }else if (datosRegistroUsuario.rol().contains("responsable")) {
+            roles.add(rolRepository.findByNombre(RolNombre.ROLE_RESPONSABLE));
         }
         usuario.setRoles(roles);
         usuarioRepository.save(usuario);

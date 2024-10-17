@@ -18,9 +18,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping("/beneficiarios")
 @SecurityRequirement(name = "bearer-key")
@@ -95,7 +92,7 @@ public class BeneficiarioController {
      * @param size Tamaño de la página
      * @return ResponseEntity con la página de beneficiarios encontrados
      */
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('RESPONSABLE')")
     @GetMapping("/buscarDpiParcial")
     public ResponseEntity<List<DatosDetalleBeneficiario>> buscarPorDpiParcial(
             @RequestParam String dpi,
@@ -118,7 +115,7 @@ public class BeneficiarioController {
     /**
      * Método para eliminar un beneficiario
      */
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('RESPONSABLE')")
     @DeleteMapping("/eliminar/{id}")
     @Transactional
     public ResponseEntity<Beneficiario> desactivarBeneficiario(@PathVariable Long id) {

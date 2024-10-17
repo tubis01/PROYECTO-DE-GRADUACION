@@ -1,0 +1,1 @@
+ALTER TABLE personas ADD apellidoDecasada VARCHAR(255);

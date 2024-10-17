@@ -1,11 +1,12 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
-import com.jayway.jsonpath.JsonPath;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.util.List;
 
 
 public interface PersonaRepository extends JpaRepository<Persona, Long> {
@@ -27,4 +28,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 
     @Query("SELECT b FROM Persona b where b.dpi Like %:dpi% AND b.activo = true")
     Page<Persona> findByDpiContaining(String dpi, PageRequest pageRequest);
+
+    @Query("SELECT p FROM  Persona  p where p.responsable.id = :idResponsable AND p.activo = :activo")
+    List<Persona> findByResponsableIdAAndActivo(Long idResponsable, boolean activo);
 }

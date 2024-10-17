@@ -15,6 +15,7 @@ public record DatosActualizarPersona(
         String tercerNombre,
         String primerApellido,
         String segundoApellido,
+        String apellidoCasada,
         String telefono,
 //        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy")
         LocalDate fechaNacimiento,

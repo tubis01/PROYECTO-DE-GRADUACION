@@ -40,5 +40,23 @@ public class ExportExcelController {
                 .body(excelBytes);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/personas/responsable")
+    public ResponseEntity<byte[]> exportarPersonasPorResponsable(@RequestParam Long idResponsable,
+                                                                 @RequestParam boolean activo) throws IOException {
+        byte[] excelBytes = exportarAExcelService.exportaPersonaExel(idResponsable, activo);
+        String nombreResponsable = exportarAExcelService.obtenerNombreResponsable(idResponsable);
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", "personas_" + nombreResponsable + ".xlsx");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(excelBytes);
+    }
+
+
+
 }
 
