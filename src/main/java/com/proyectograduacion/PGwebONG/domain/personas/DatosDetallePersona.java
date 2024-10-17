@@ -30,7 +30,8 @@ public record DatosDetallePersona(
                                   TipoProductor tipoProductor,
                                   Long idResponsable,
                                   String responsable,
-                                  Organizacion organizacion,
+                                  Long idOrganizacion,
+                                  String organizacion,
                                   String tipoVivienda
 ) {
     public DatosDetallePersona(Persona persona) {
@@ -57,7 +58,8 @@ public record DatosDetallePersona(
                 persona.getTipoProductor(),
                 persona.getResponsable().getId(),
                 persona.getResponsable().getNombre(),
-                persona.getOrganizacion(),
+                persona.getOrganizacion().getId(),
+                persona.getOrganizacion().getNombre(),
                 persona.getTipoVivienda()
         );
     }

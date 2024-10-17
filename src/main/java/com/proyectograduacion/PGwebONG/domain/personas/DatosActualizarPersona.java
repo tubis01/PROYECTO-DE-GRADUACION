@@ -31,7 +31,7 @@ public record DatosActualizarPersona(
         boolean vendeExecedenteCosecha,
         TipoProductor tipoProductor,
         String responsable,
-        Organizacion organizacion,
+        String organizacion,
         String tipoVivienda
 
 

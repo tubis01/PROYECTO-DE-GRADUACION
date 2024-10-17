@@ -31,4 +31,7 @@ public interface PersonaRepository extends JpaRepository<Persona, Long> {
 
     @Query("SELECT p FROM  Persona  p where p.responsable.id = :idResponsable AND p.activo = :activo")
     List<Persona> findByResponsableIdAAndActivo(Long idResponsable, boolean activo);
+
+    @Query("SELECT p FROM  Persona  p where p.organizacion.id = :idOrganizacion AND p.activo = :activo")
+    List<Persona> findByOrganizacionId(Long idOrganizacion, boolean activo);
 }

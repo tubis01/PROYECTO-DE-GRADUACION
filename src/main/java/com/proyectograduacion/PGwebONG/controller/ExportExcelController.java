@@ -1,5 +1,6 @@
 package com.proyectograduacion.PGwebONG.controller;
 
+import com.proyectograduacion.PGwebONG.service.ExportResult;
 import com.proyectograduacion.PGwebONG.service.ExportarAExcelService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
@@ -25,38 +26,36 @@ public class ExportExcelController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("/benenficiarios")
+    @GetMapping("/beneficiarios")
     public ResponseEntity<byte[]> exportBeneficiariosAExcel(@RequestParam Long idProyecto,
                                                             @RequestParam boolean activo) throws IOException {
-        byte[] excelBytes = exportarAExcelService.exportarBeneficiarioAExcel(idProyecto, activo);
-        String nombreProyecto = exportarAExcelService.obtenerNombreProyecto(idProyecto);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-        headers.setContentDispositionFormData("attachment", "beneficiarios_" + nombreProyecto + ".xlsx");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(excelBytes);
+        ExportResult resultado = exportarAExcelService.exportarBeneficiarioAExcel(idProyecto, activo);
+        return construirRespuestaExcel(resultado);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/personas/responsable")
     public ResponseEntity<byte[]> exportarPersonasPorResponsable(@RequestParam Long idResponsable,
                                                                  @RequestParam boolean activo) throws IOException {
-        byte[] excelBytes = exportarAExcelService.exportaPersonaExel(idResponsable, activo);
-        String nombreResponsable = exportarAExcelService.obtenerNombreResponsable(idResponsable);
-
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
-        headers.setContentDispositionFormData("attachment", "personas_" + nombreResponsable + ".xlsx");
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(excelBytes);
+        ExportResult resultado = exportarAExcelService.exportaPersonaExel(idResponsable, activo);
+        return construirRespuestaExcel(resultado);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/personas/organizacion")
+    public ResponseEntity<byte[]> exportarPersonasPorOrganizacion(@RequestParam Long idOrganizacion,
+                                                                  @RequestParam boolean activo) throws IOException {
+        ExportResult resultado = exportarAExcelService.exportaPersonaExelPorOrganizacion(idOrganizacion, activo);
+        return construirRespuestaExcel(resultado);
+    }
 
-
+    // Método reutilizable para construir la respuesta HTTP con el archivo Excel
+    private ResponseEntity<byte[]> construirRespuestaExcel(ExportResult resultado) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+        headers.setContentDispositionFormData("attachment", resultado.getNombreArchivo());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(resultado.getContenido());
+    }
 }
-

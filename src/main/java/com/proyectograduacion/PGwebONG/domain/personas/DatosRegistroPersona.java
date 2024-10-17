@@ -64,7 +64,7 @@ public record DatosRegistroPersona(
         @NotNull
         Long responsable,
         @NotNull
-        Organizacion organizacion,
+        Long organizacion,
 
         String tipoVivienda
 ) {

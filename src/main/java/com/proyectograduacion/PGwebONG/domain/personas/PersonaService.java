@@ -1,6 +1,8 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
 import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosDetalleBeneficiario;
+import com.proyectograduacion.PGwebONG.domain.organizacion.Organizacion;
+import com.proyectograduacion.PGwebONG.domain.organizacion.OrganizacionRepository;
 import com.proyectograduacion.PGwebONG.domain.responsables.Responsable;
 import com.proyectograduacion.PGwebONG.domain.responsables.ResponsableRepository;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
@@ -16,11 +18,14 @@ public class PersonaService {
     //    inyeccin de dependencias
     private final PersonaRepository personaRepository;
     private final ResponsableRepository responsableRepository;
+    private final OrganizacionRepository organizacionRepository;
 
     public PersonaService(PersonaRepository personaRepository,
-                          ResponsableRepository responsableRepository) {
+                          ResponsableRepository responsableRepository,
+                          OrganizacionRepository organizacionRepository) {
         this.personaRepository = personaRepository;
         this.responsableRepository = responsableRepository;
+        this.organizacionRepository = organizacionRepository;
     }
 
     // listar personas activas
@@ -39,12 +44,15 @@ public class PersonaService {
     public Persona registrarPersona(DatosRegistroPersona datosRegistroPersona) {
         validarUnicidadPersona(datosRegistroPersona);
         Responsable responsable = validarResponsable(datosRegistroPersona.responsable());
+        Organizacion organizacion = validarOrganizacion(datosRegistroPersona.organizacion());
 
-        Persona newPerson = new Persona(datosRegistroPersona, responsable);
+        Persona newPerson = new Persona(datosRegistroPersona, responsable, organizacion);
         responsable.agregarPersona(newPerson);
         personaRepository.save(newPerson);
         return newPerson;
     }
+
+
 
     public Persona obtenerPersonaPorDPI(String dpi) {
         return verificarExistencia(dpi);
@@ -55,7 +63,9 @@ public class PersonaService {
         Persona persona = verificarExistencia(datosActualizarPersona.DPI());
         Responsable responsable = datosActualizarPersona.responsable() != null ?
                 validarResponsable(Long.valueOf(datosActualizarPersona.responsable())) : persona.getResponsable();
-        persona.actualizarPersona(datosActualizarPersona, responsable);
+        Organizacion organizacion = datosActualizarPersona.organizacion() != null ?
+                validarOrganizacion(Long.valueOf(datosActualizarPersona.organizacion())) : persona.getOrganizacion();
+        persona.actualizarPersona(datosActualizarPersona, responsable, organizacion);
         return new DatosDetallePersona(persona);
     }
 
@@ -86,6 +96,12 @@ public class PersonaService {
     private Responsable validarResponsable(Long responsableId) {
         return responsableRepository.findById(responsableId)
                 .orElseThrow(() -> new validacionDeIntegridad("No existe un responsable con el id proporcionado"));
+    }
+
+    private Organizacion validarOrganizacion(Long organizacion) {
+        return organizacionRepository.findById(organizacion)
+                .orElseThrow(() -> new validacionDeIntegridad("No existe una organización con el id proporcionado"));
+
     }
 
 
