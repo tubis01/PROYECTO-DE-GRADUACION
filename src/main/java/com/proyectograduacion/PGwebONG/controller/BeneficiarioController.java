@@ -35,7 +35,7 @@ public class BeneficiarioController {
      * @param assembler Ensamblador de recursos paginados.
      * @return ResponseEntity con la lista de beneficiarios.
      */
-    @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('RESPONSABLE')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleBeneficiario>>> listarPersonas(Pageable pageable,
                                                                                             PagedResourcesAssembler<DatosDetalleBeneficiario> assembler) {

@@ -44,7 +44,7 @@ public class ReporteService {
     }
 
 
-
-
-
+    public Long contarTotalBeneficiarios() {
+        return beneficiarioRepository.countByActivo(true);
+    }
 }

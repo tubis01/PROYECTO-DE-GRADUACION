@@ -11,7 +11,9 @@ public record DatosDetalleUsuario(
                 usuario.getId(),
                 usuario.getEmail(),
                 usuario.getUsuario(),
-                usuario.getRoles().iterator().next().getNombre()
+                usuario.getRoles() != null && !usuario.getRoles().isEmpty() ?
+                        usuario.getRoles().iterator().next().getNombre() :
+                        null //
         );
     }
 }

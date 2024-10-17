@@ -54,5 +54,10 @@ public class ReporteController {
         return ResponseEntity.ok(datosProyectos);
     }
 
+    @GetMapping("/totalBeneficiarios")
+    public ResponseEntity<Long> reporteTotalBeneficiarios() {
+        return ResponseEntity.ok(reporteService.contarTotalBeneficiarios());
+    }
+
 
 }
