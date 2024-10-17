@@ -1,6 +1,7 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.service.ExportarAExcelService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 @RestController
 @RequestMapping("/export")
+@SecurityRequirement(name = "bearer-key")
 public class ExportExcelController {
 
     private final ExportarAExcelService exportarAExcelService;

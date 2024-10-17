@@ -37,6 +37,7 @@ public class AutenticacionController {
         String jwtToken = tokenService.generarToken( usuarioAutorizado);
 
         UsuarioPrincipal usuario = (UsuarioPrincipal)  usuarioAutorizado.getPrincipal();
+
         List<String> roles = usuario.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .toList();

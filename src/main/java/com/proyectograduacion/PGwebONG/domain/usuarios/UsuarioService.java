@@ -126,10 +126,10 @@ public class UsuarioService {
 //    verificar usuario e email
     private void verificarUsuarioYEmail(String usuario, String email){
         if(usuarioRepository.existsByEmail(email)){
-            throw new validacionDeIntegridad("Ya existe el email, por favor ingrese otro");
+            throw new validacionDeIntegridad("Ya existe el {{ email }}, por favor ingrese otro");
         }
         if(usuarioRepository.existsByUsuario(usuario)){
-            throw new validacionDeIntegridad("Ya existe un usuario con ese nombre, por favor ingrese otro");
+            throw new validacionDeIntegridad("Ya existe un {{ usuario }} con ese nombre, por favor ingrese otro");
         }
     }
 

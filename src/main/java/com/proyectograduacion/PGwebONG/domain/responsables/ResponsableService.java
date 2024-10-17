@@ -33,13 +33,11 @@ public class ResponsableService {
 
     public Responsable registrarResponsable(DatosRegistroResponsable datosRegistroDonador) {
         validarCorreoTelefono(datosRegistroDonador);
-
         Responsable newResponsable = new Responsable(datosRegistroDonador);
         responsableRepository.save(newResponsable);
         return newResponsable;
 
     }
-
 
     public Responsable modificarResponsable(DatosActualizarResponsable datosActualizarResponsable) {
         Responsable responsable = verificarExistenciaResponsable(datosActualizarResponsable.id());
@@ -72,10 +70,10 @@ public class ResponsableService {
 
     private void validarCorreoTelefono(DatosRegistroResponsable datosRegistroDonador) {
         if(responsableRepository.existsByCorreo(datosRegistroDonador.correo())){
-            throw new validacionDeIntegridad("Ya existe el correo proporcionado");
+            throw new validacionDeIntegridad("Ya existe el {{ correo }} proporcionado");
         }
         if(responsableRepository.existsByTelefono(datosRegistroDonador.telefono())){
-            throw new validacionDeIntegridad ("Ya existe el teléfono proporcionado");
+            throw new validacionDeIntegridad ("Ya existe el {{ teléfono }} proporcionado");
         }
     }
 }

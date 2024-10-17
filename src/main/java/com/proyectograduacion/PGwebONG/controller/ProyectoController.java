@@ -1,13 +1,13 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.domain.proyectos.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +17,9 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping("/proyectos")
+@SecurityRequirement(name = "bearer-key")
 public class ProyectoController {
 
     private final ProyectoService proyectoService;
@@ -37,18 +35,14 @@ public class ProyectoController {
      * @param assembler Ensamblador de recursos paginados.
      * @return ResponseEntity con la lista de proyectos.
      */
-
     @PreAuthorize("hasRole('ADMIN') or hasRole('DIGITADOR') or hasRole('USER')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectos(Pageable pageable,
-                                                                   PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
-
+                                                                                         PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
         Page<DatosDetalleProyecto> proyectos = proyectoService.listarProyectos(pageable);
-        PagedModel<EntityModel<DatosDetalleProyecto>> pagedModel = assembler.toModel(proyectos, proyecto ->{
-            Link selfLink  = linkTo(methodOn(ProyectoController.class).obtenerProyectoPorId(proyecto.id())).withSelfRel();
-            Link eliminarLink = linkTo(methodOn(ProyectoController.class).finalizarProyecto(proyecto.id())).withRel("eliminar");
-            return EntityModel.of(proyecto, selfLink, eliminarLink);
-        });
+
+        // Convertir a PagedModel sin agregar enlaces adicionales
+        PagedModel<EntityModel<DatosDetalleProyecto>> pagedModel = assembler.toModel(proyectos, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
     }
 
@@ -57,11 +51,10 @@ public class ProyectoController {
     public ResponseEntity<List<DatosDetalleProyecto>> buscarPorDpiParcial(
             @RequestParam String term,
             @RequestParam int page,
-            @RequestParam int size){
-        List<DatosDetalleProyecto> beneficiarios = proyectoService.buscarPorDpiParcial(term, page, size);
-        return ResponseEntity.ok(beneficiarios);
+            @RequestParam int size) {
+        List<DatosDetalleProyecto> proyectos = proyectoService.buscarPorDpiParcial(term, page, size);
+        return ResponseEntity.ok(proyectos);
     }
-
 
     /**
      * Lista los proyectos inactivos.
@@ -70,17 +63,14 @@ public class ProyectoController {
      * @param assembler Ensamblador de recursos paginados.
      * @return ResponseEntity con la lista de proyectos inactivos.
      */
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleProyecto>>> listarProyectosInactivos(Pageable pageable,
-                                                                   PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
-
+                                                                                                  PagedResourcesAssembler<DatosDetalleProyecto> assembler) {
         Page<DatosDetalleProyecto> proyectos = proyectoService.listarProyectosInactivos(pageable);
-        PagedModel<EntityModel<DatosDetalleProyecto>> pagedModel = assembler.toModel(proyectos, proyecto ->{
-            Link selfLink  = linkTo(methodOn(ProyectoController.class).obtenerProyectoPorId(proyecto.id())).withSelfRel();
-            return EntityModel.of(proyecto, selfLink);
-        });
+
+        // Convertir a PagedModel sin agregar enlaces adicionales
+        PagedModel<EntityModel<DatosDetalleProyecto>> pagedModel = assembler.toModel(proyectos, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
     }
 
@@ -95,6 +85,8 @@ public class ProyectoController {
     public ResponseEntity<EntityModel<DatosDetalleProyecto>> obtenerProyectoPorId(@PathVariable Long id) {
         Proyecto proyecto = proyectoService.obtenerProyectoPorId(id);
         DatosDetalleProyecto proyectoDTO = new DatosDetalleProyecto(proyecto);
+
+        // Devolver la entidad sin enlaces adicionales
         return ResponseEntity.ok(EntityModel.of(proyectoDTO));
     }
 
@@ -105,7 +97,6 @@ public class ProyectoController {
      * @param uriComponentsBuilder  UriComponentsBuilder.
      * @return ResponseEntity con el proyecto registrado.
      */
-
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<EntityModel<DatosDetalleProyecto>> registrarProyecto(@RequestBody @Valid DatosRegistroProyecto datosRegistroProyecto,
@@ -113,6 +104,8 @@ public class ProyectoController {
         Proyecto proyecto = proyectoService.registrarProyecto(datosRegistroProyecto);
         DatosDetalleProyecto proyectoDTO = new DatosDetalleProyecto(proyecto);
         URI uri = uriComponentsBuilder.path("/proyectos/{id}").buildAndExpand(proyectoDTO.id()).toUri();
+
+        // Retornar el proyecto registrado sin enlaces adicionales
         return ResponseEntity.created(uri).body(EntityModel.of(proyectoDTO));
     }
 
@@ -124,12 +117,11 @@ public class ProyectoController {
         return ResponseEntity.ok(proyectoDTO);
     }
 
-
     /**
-     * Elimina un proyecto.
+     * Finaliza un proyecto.
      *
-     * @param id Id del proyecto a eliminar.
-     * @return ResponseEntity con el proyecto eliminado.
+     * @param id Id del proyecto a finalizar.
+     * @return ResponseEntity con el proyecto finalizado.
      */
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/finalizar/{id}")
@@ -138,5 +130,4 @@ public class ProyectoController {
         proyectoService.finalizarProyecto(id);
         return ResponseEntity.noContent().build();
     }
-
 }

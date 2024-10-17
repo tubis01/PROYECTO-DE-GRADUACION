@@ -4,6 +4,7 @@ import com.proyectograduacion.PGwebONG.domain.proyectos.DatosDetalleProyecto;
 import com.proyectograduacion.PGwebONG.domain.proyectos.Estado;
 import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
 import com.proyectograduacion.PGwebONG.service.ReporteService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/reporte")
+@SecurityRequirement(name = "bearer-key")
 public class ReporteController {
     private final ReporteService reporteService;
 

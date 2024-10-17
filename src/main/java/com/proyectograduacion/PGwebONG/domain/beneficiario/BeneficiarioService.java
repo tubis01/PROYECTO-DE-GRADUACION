@@ -93,7 +93,7 @@ public class BeneficiarioService {
             throw new validacionDeIntegridad("El proyecto no existe");
         }
         if(!personaRepository.existsByDpi(dpi)){
-            throw new validacionDeIntegridad("No existe la persona Con el DPI proporcionado");
+            throw new validacionDeIntegridad("No existe la persona Con el {{ DPI }} proporcionado");
         }
     }
 

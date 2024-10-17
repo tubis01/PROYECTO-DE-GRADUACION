@@ -6,6 +6,7 @@ import com.proyectograduacion.PGwebONG.emialPassword.dto.ChangePasswordDTO;
 import com.proyectograduacion.PGwebONG.emialPassword.dto.EmailValuesDTO;
 import com.proyectograduacion.PGwebONG.emialPassword.dto.Mensaje;
 import com.proyectograduacion.PGwebONG.emialPassword.service.EmailService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,7 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/email")
+@SecurityRequirement(name = "bearer-key")
 public class EmailController {
 
     private final EmailService emailService;

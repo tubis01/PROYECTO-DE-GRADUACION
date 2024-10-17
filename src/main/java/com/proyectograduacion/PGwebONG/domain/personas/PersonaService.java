@@ -78,7 +78,7 @@ public class PersonaService {
 
     public Persona verificarExistencia(String dpi) {
         if (!personaRepository.existsByDpi(dpi)) {
-            throw new validacionDeIntegridad("No existe una persona con el DPI proporcionado");
+            throw new validacionDeIntegridad("No existe una persona con el {{ DPI }} proporcionado");
         }
         return personaRepository.getReferenceByDpi(dpi);
     }
@@ -91,17 +91,17 @@ public class PersonaService {
 
     private void validarUnicidadPersona(DatosRegistroPersona datosRegistroPersona) {
         if (personaRepository.existsByDpi(datosRegistroPersona.DPI())) {
-            throw new validacionDeIntegridad("Ya existe una persona con ese DPI.");
+            throw new validacionDeIntegridad("Ya existe una persona con ese {{ DPI }}.");
         }
         if (datosRegistroPersona.NIT() != null && !datosRegistroPersona.NIT().isEmpty()) {
             // Verificar si el NIT ya existe solo si no está vacío o nulo
             if (personaRepository.existsByNIT(datosRegistroPersona.NIT())) {
-                throw new validacionDeIntegridad("Ya existe una persona con ese NIT.");
+                throw new validacionDeIntegridad("Ya existe una persona con ese {{ NIT }}.");
             }
         }
 
         if (personaRepository.existsByTelefono(datosRegistroPersona.telefono())) {
-            throw new validacionDeIntegridad("Ya existe el teléfono registrado");
+            throw new validacionDeIntegridad("Ya existe el {{ teléfono }} registrado");
         }
     }
 

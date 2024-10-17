@@ -6,7 +6,8 @@ import com.proyectograduacion.PGwebONG.domain.discapacidad.Discapacidad;
 import java.time.LocalDate;
 
 public record DatosDetallePersona(
-                                    String DPI,
+
+        String DPI,
                                   String NIT,
                                   String primerNombre,
                                   String segundoNombre,

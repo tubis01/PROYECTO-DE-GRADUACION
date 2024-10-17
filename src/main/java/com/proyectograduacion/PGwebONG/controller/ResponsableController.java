@@ -1,6 +1,7 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.domain.responsables.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -16,52 +18,37 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.net.URI;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping("/responsables")
+@SecurityRequirement(name = "bearer-key")
 public class ResponsableController {
 
     private final ResponsableService responsableService;
 
-    public  ResponsableController(ResponsableService responsableService){
+    public ResponsableController(ResponsableService responsableService) {
         this.responsableService = responsableService;
     }
 
-    /*
-    * Método que lista los donadores
-    *
-     */
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/listar")
-    public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadores(Pageable pageable,
-                                                                                            PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
+    public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarResponsables(Pageable pageable,
+                                                                                               PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
 
         Page<DatosDetalleResponsable> responsables = responsableService.listarResponsablesActivos(pageable);
 
-        PagedModel<EntityModel<DatosDetalleResponsable>> pagedModel = assembler.toModel(responsables, donador ->{
-            Link selfLink  = linkTo(methodOn(ResponsableController.class).obtenerResponsablePorId(donador.id())).withSelfRel();
-            Link eliminarLink = linkTo(methodOn(ResponsableController.class).eliminarResponsable(donador.id())).withRel("eliminar");
-            return EntityModel.of(donador, selfLink, eliminarLink);
-
-        });
+        // Convertir a PagedModel sin agregar enlaces adicionales
+        PagedModel<EntityModel<DatosDetalleResponsable>> pagedModel = assembler.toModel(responsables, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
     }
 
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
-    public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarDonadoresInactivos(Pageable pageable,
-                                                                                                 PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
+    public ResponseEntity<PagedModel<EntityModel<DatosDetalleResponsable>>> listarResponsablesInactivos(Pageable pageable,
+                                                                                                        PagedResourcesAssembler<DatosDetalleResponsable> assembler) {
         Page<DatosDetalleResponsable> responsables = responsableService.listarResponsablesInactivos(pageable);
 
-        PagedModel<EntityModel<DatosDetalleResponsable>> pagedModel = assembler.toModel(responsables, responsable -> {
-            Link selfLink = linkTo(methodOn(ResponsableController.class).obtenerResponsablePorId(responsable.id())).withSelfRel();
-            Link activarLink = linkTo(methodOn(ResponsableController.class).activarResponsable(responsable.id())).withRel("activar");
-            Link eliminarBdLink = linkTo(methodOn(ResponsableController.class).eliminarResponsableBD(responsable.id())).withRel("eliminarBD");
-            return EntityModel.of(responsable, selfLink, activarLink, eliminarBdLink);
-        });
+        // Convertir a PagedModel sin agregar enlaces adicionales
+        PagedModel<EntityModel<DatosDetalleResponsable>> pagedModel = assembler.toModel(responsables, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
     }
 
@@ -69,14 +56,10 @@ public class ResponsableController {
     @GetMapping("/{id}")
     public ResponseEntity<EntityModel<DatosDetalleResponsable>> obtenerResponsablePorId(@PathVariable Long id) {
         Responsable responsable = responsableService.obtenerResponsablePorId(id);
-        DatosDetalleResponsable donadorDTO = new DatosDetalleResponsable(responsable);
+        DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
 
-        // Enlaces específicos para un recurso individual
-        EntityModel<DatosDetalleResponsable> entityModel = EntityModel.of(donadorDTO);
-        entityModel.add(linkTo(methodOn(ResponsableController.class).obtenerResponsablePorId(id)).withSelfRel());
-        entityModel.add(linkTo(methodOn(ResponsableController.class).modificarResponsable(new DatosActualizarResponsable(responsable.getId(),null,null,null, null,null,null))).withRel("modificar"));
-        entityModel.add(linkTo(methodOn(ResponsableController.class).eliminarResponsable(id)).withRel("eliminar"));
-
+        // Devolver la entidad sin enlaces adicionales
+        EntityModel<DatosDetalleResponsable> entityModel = EntityModel.of(responsableDTO);
         return ResponseEntity.ok(entityModel);
     }
 
@@ -84,12 +67,12 @@ public class ResponsableController {
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetalleResponsable> registrarResponsable(@RequestBody @Valid DatosRegistroResponsable datosRegistroResponsable,
                                                                         UriComponentsBuilder uriBuilder) {
-
         Responsable responsable = responsableService.registrarResponsable(datosRegistroResponsable);
+        DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
 
-        DatosDetalleResponsable donadorDTO = new DatosDetalleResponsable(responsable);
-        URI uri = uriBuilder.path("/donadores/{id}").buildAndExpand(responsable.getId()).toUri();
-        return ResponseEntity.created(uri).body(donadorDTO);
+        // Construir la URI del nuevo recurso
+        URI uri = uriBuilder.path("/responsables/{id}").buildAndExpand(responsable.getId()).toUri();
+        return ResponseEntity.created(uri).body(responsableDTO);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -97,8 +80,8 @@ public class ResponsableController {
     @Transactional
     public ResponseEntity<DatosDetalleResponsable> modificarResponsable(@RequestBody @Valid DatosActualizarResponsable datosActualizarResponsable) {
         Responsable responsable = responsableService.modificarResponsable(datosActualizarResponsable);
-        DatosDetalleResponsable donadorDTO = new DatosDetalleResponsable(responsable);
-        return ResponseEntity.ok(donadorDTO);
+        DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
+        return ResponseEntity.ok(responsableDTO);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -124,9 +107,5 @@ public class ResponsableController {
         responsableService.activarResponsable(id);
         return ResponseEntity.noContent().build();
     }
-
-
-
-
-
 }
+

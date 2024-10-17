@@ -1,13 +1,13 @@
 package com.proyectograduacion.PGwebONG.controller;
 
 import com.proyectograduacion.PGwebONG.domain.personas.*;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
-import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,20 +17,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import java.net.URI;
 import java.util.List;
 
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
-
 @RestController
 @RequestMapping("/api/personas")
+@SecurityRequirement(name = "bearer-key")
 public class PersonaController {
     private final PersonaService personaService;
-
 
     public PersonaController(PersonaService personaService) {
         this.personaService = personaService;
     }
 
-//    obtener lista de personas
+    // Obtener lista de personas
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetallePersona>>> listarPersonas(Pageable pageable,
@@ -38,41 +35,29 @@ public class PersonaController {
         // Obtener la página de datos
         Page<DatosDetallePersona> personas = personaService.listarPersonas(pageable);
 
-        PagedModel<EntityModel<DatosDetallePersona>> pagedModel = assembler.toModel(personas, persona -> {
-            Link selfLink = linkTo(methodOn(PersonaController.class).obtenerPersonaPorDPI(persona.DPI())).withSelfRel();
-            Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(persona.DPI())).withRel("eliminar");
-            return EntityModel.of(persona, selfLink, eliminarLink);
-        });
+        // Convertir a PagedModel sin enlaces adicionales
+        PagedModel<EntityModel<DatosDetallePersona>> pagedModel = assembler.toModel(personas, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
-
     }
 
-    //    listar personas inactivas
+    // Listar personas inactivas
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/inactivos")
     public ResponseEntity<PagedModel<EntityModel<DatosDetallePersona>>> listarPersonasInactivas(Pageable pageable,
-                                                                                                PagedResourcesAssembler<DatosDetallePersona> assembler){
+                                                                                                PagedResourcesAssembler<DatosDetallePersona> assembler) {
         Page<DatosDetallePersona> personas = personaService.listarPersonasInactivas(pageable);
-        PagedModel<EntityModel<DatosDetallePersona>> pagedModel = assembler.toModel(personas, persona -> {
-            Link selfLink = linkTo(methodOn(PersonaController.class).obtenerPersonaPorDPI(persona.DPI())).withSelfRel();
-            Link activarLink = linkTo(methodOn(PersonaController.class).activarPersona(persona.DPI())).withRel("activar");
-            Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersonaBD(persona.DPI())).withRel("elimnarDB");
-            return EntityModel.of(persona, selfLink, eliminarLink,activarLink);
-        });
-
+        PagedModel<EntityModel<DatosDetallePersona>> pagedModel = assembler.toModel(personas, EntityModel::of);
         return ResponseEntity.ok(pagedModel);
     }
 
-//    obtener persona por dpi
-
+    // Obtener persona por DPI
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/buscar/{dpi}")
-    public ResponseEntity<EntityModel<DatosDetallePersona>> obtenerPersonaPorDPI(@PathVariable String dpi){
+    public ResponseEntity<EntityModel<DatosDetallePersona>> obtenerPersonaPorDPI(@PathVariable String dpi) {
         Persona persona = personaService.obtenerPersonaPorDPI(dpi);
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
-        Link selfLink = linkTo(methodOn(PersonaController.class).obtenerPersonaPorDPI(dpi)).withSelfRel();
-        Link eliminarLink = linkTo(methodOn(PersonaController.class).eliminarPersona(dpi)).withRel("eliminar");
-        return ResponseEntity.ok(EntityModel.of(personaDTO, selfLink, eliminarLink));
+        // Devolver la respuesta sin los enlaces
+        return ResponseEntity.ok(EntityModel.of(personaDTO));
     }
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -80,14 +65,12 @@ public class PersonaController {
     public ResponseEntity<List<DatosDetallePersona>> buscarPorDpiParcial(
             @RequestParam String dpi,
             @RequestParam int page,
-            @RequestParam int size){
+            @RequestParam int size) {
         List<DatosDetallePersona> beneficiarios = personaService.buscarPorDpiParcial(dpi, page, size);
         return ResponseEntity.ok(beneficiarios);
     }
 
-
-
-//    registrar persona
+    // Registrar persona
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetallePersona> registrarPersona(@RequestBody @Valid DatosRegistroPersona datosRegistroPersona,
@@ -96,10 +79,9 @@ public class PersonaController {
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
         URI uri = uriBuilder.path("/api/personas/{id}").buildAndExpand(persona.getId()).toUri();
         return ResponseEntity.created(uri).body(personaDTO);
-
     }
 
-//    actualizar persona
+    // Actualizar persona
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/modificar")
     @Transactional
@@ -108,20 +90,20 @@ public class PersonaController {
         return ResponseEntity.ok(persona);
     }
 
-//    elimininacinoLogica
+    // Eliminación lógica
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/eliminar/{dpi}")
     @Transactional
-    public ResponseEntity<Persona> eliminarPersona(@PathVariable String dpi){
+    public ResponseEntity<Persona> eliminarPersona(@PathVariable String dpi) {
         personaService.eliminarPersona(dpi);
         return ResponseEntity.noContent().build();
     }
 
-//    eliminacion fisica
+    // Eliminación física
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @DeleteMapping("/eliminarBD/{dpi}")
     @Transactional
-    public ResponseEntity<Persona> eliminarPersonaBD(@PathVariable String dpi){
+    public ResponseEntity<Persona> eliminarPersonaBD(@PathVariable String dpi) {
         personaService.eliminarPersonaBD(dpi);
         return ResponseEntity.noContent().build();
     }
@@ -133,6 +115,4 @@ public class PersonaController {
         personaService.activarPersona(dpi);
         return ResponseEntity.noContent().build();
     }
-
-
 }
