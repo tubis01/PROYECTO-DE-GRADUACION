@@ -38,7 +38,7 @@ public class SecurityFilter  extends OncePerRequestFilter {
                         (usuario, null, usuario.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-            System.out.println(token);
+//            System.out.println(token);
             System.out.println(tokenService.getSubject(token));
         }
         filterChain.doFilter(request, response);

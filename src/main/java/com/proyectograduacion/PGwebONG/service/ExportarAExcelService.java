@@ -203,7 +203,7 @@ public class ExportarAExcelService {
         row.createCell(26).setCellValue(persona.isVendeExecedenteCosecha() ? "Sí" : "No");
         row.createCell(27).setCellValue(persona.getTipoProductor() != null ? persona.getTipoProductor().name() : "");
         row.createCell(28).setCellValue(Optional.ofNullable(persona.getResponsable()).map(Responsable::getNombre).orElse(""));
-        row.createCell(29).setCellValue(Optional.ofNullable(persona.getOrganizacion()).map(Object::toString).orElse(""));
+        row.createCell(29).setCellValue(Optional.ofNullable(persona.getOrganizacion()).map(Organizacion::getNombre).orElse(""));
     }
 
     private void crearEncabezado(Sheet sheet) {

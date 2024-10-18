@@ -23,7 +23,7 @@ public record DatosDetalleBeneficiario(
                 beneficiario.getPersona().getSegundoApellido(),
                 beneficiario.getPersona().getTelefono(),
                 beneficiario.getPersona().getResponsable().getNombre(),
-                beneficiario.getPersona().getOrganizacion().toString(),
+                beneficiario.getPersona().getOrganizacion().getNombre(),
                 beneficiario.getProyecto().getId(),
                 beneficiario.getProyecto().getNombre()
 

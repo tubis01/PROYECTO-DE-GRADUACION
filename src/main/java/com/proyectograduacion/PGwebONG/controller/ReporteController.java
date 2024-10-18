@@ -35,10 +35,10 @@ public class ReporteController {
         return ResponseEntity.ok(reporteService.contarProyectosPorEstado(estado));
     }
 
-    @GetMapping("/beneficiariosActivos")
-    public ResponseEntity<Long> reporteBeneficiariosActivos(@RequestParam boolean activo) {
-        return ResponseEntity.ok(reporteService.contarBeneficiariosActivos(activo));
-    }
+//    @GetMapping("/beneficiariosActivos")
+//    public ResponseEntity<Long> reporteBeneficiariosActivos(@RequestParam boolean activo) {
+//        return ResponseEntity.ok(reporteService.contarBeneficiariosActivos(activo));
+//    }
 
     @GetMapping("/beneficiariosPorMes")
     public ResponseEntity<Long> reporteBeneficiariosPorMes(@RequestParam int mes) {
