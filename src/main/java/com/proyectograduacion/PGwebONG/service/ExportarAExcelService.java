@@ -45,7 +45,6 @@ public class ExportarAExcelService {
         Proyecto proyecto = proyectoService.obtenerProyectoPorId(idProyecto);
         List<Beneficiario> beneficiarios = beneficiarioRepository.findByProyectoIdAndActivo(idProyecto, activo);
         List<Persona> personas = beneficiarios.stream().map(Beneficiario::getPersona).toList();
-        System.out.println("beneficiarios por proyecto: " + beneficiarios);
         byte[] contenido = exportarPersonasAExcel(personas, "Beneficiarios Proyecto " + proyecto.getNombre());
         return new ExportResult(contenido, "beneficiarios_" + proyecto.getNombre() + ".xlsx");
     }
@@ -53,7 +52,6 @@ public class ExportarAExcelService {
     public ExportResult exportaPersonaExel(Long idResponsable, boolean activo) throws IOException {
         Responsable responsable = responsableService.obtenerResponsablePorId(idResponsable);
         List<Persona> personas = personaRepository.findByResponsableIdAAndActivo(idResponsable, activo);
-        System.out.println("personas por responsable: " + personas);
         byte[] contenido = exportarPersonasAExcel(personas, "Personas Responsable " + responsable.getNombre());
         return new ExportResult(contenido, "personas_" + responsable.getNombre() + ".xlsx");
     }
@@ -61,7 +59,6 @@ public class ExportarAExcelService {
     public ExportResult exportaPersonaExelPorOrganizacion(Long idOrganizacion, boolean activo) throws IOException {
         Organizacion organizacion = organizacionService.obtenerOrganizacionPorId(idOrganizacion);
         List<Persona> personas = personaRepository.findByOrganizacionId(idOrganizacion, activo);
-        System.out.println("personas por organzacion: " + personas);
         byte[] contenido = exportarPersonasAExcel(personas, "Personas Organización " + organizacion.getNombre());
         return new ExportResult(contenido, "personas_" + organizacion.getNombre() + ".xlsx");
     }

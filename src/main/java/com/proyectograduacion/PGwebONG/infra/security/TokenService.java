@@ -52,7 +52,6 @@ public class TokenService {
                         .build()
                         .verify(token);
                 verifier.getSubject();
-                System.out.println(token);
             } catch (Exception e) {
                 throw new RuntimeException("Token no valido");
             }

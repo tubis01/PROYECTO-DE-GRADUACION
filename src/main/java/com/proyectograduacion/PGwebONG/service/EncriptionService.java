@@ -1,35 +1,49 @@
 package com.proyectograduacion.PGwebONG.service;
 
+
 import org.springframework.stereotype.Service;
 
 import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-import java.util.Base64;
 
 @Service
 public class EncriptionService {
 
-    // Clave secreta para AES-256 (debe ser exactamente la misma que en el frontend)
-    private static final String SECRET_KEY = "myesbale12345678901234567890123456";  // Clave AES de 32 bytes
+    private static final String SECRET_KEY = "jD9pX!z3aQ5bH2@W5v#U4dL3r%Z1kV8p";
+    private static final String INIT_VECTOR = "a3f7c9d2a3f7c9d2"; // Necesita tener 16 caracteres para AES
 
-    public String decryptData(String encryptedData) throws Exception {
-        byte[] keyBytes = SECRET_KEY.getBytes(StandardCharsets.UTF_8);
-        SecretKeySpec secretKey = new SecretKeySpec(keyBytes, "AES");
+    public String decrypt(String encryptedData) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec skeySpec = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "AES");
 
-        // Inicializar el cifrador AES en modo ECB con PKCS5Padding
-        Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-        cipher.init(Cipher.DECRYPT_MODE, secretKey);
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.DECRYPT_MODE, skeySpec, iv);
 
-        // Decodificar los datos de Base64 y desencriptar
-        byte[] decodedBytes = Base64.getDecoder().decode(encryptedData);
-        byte[] decryptedBytes = cipher.doFinal(decodedBytes);
+            byte[] original = cipher.doFinal(Base64.getDecoder().decode(encryptedData));
+            return new String(original);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error en desencriptación: datos inválidos o formato incorrecto.", ex);
+        }
+    }
 
-        return new String(decryptedBytes, StandardCharsets.UTF_8);  // Convertir los bytes desencriptados a cadena UTF-8
+    public String encrypt(String data) {
+        try {
+            IvParameterSpec iv = new IvParameterSpec(INIT_VECTOR.getBytes(StandardCharsets.UTF_8));
+            SecretKeySpec skeySpec = new SecretKeySpec(SECRET_KEY.getBytes(StandardCharsets.UTF_8), "AES");
+
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS5PADDING");
+            cipher.init(Cipher.ENCRYPT_MODE, skeySpec, iv);
+
+            byte[] encrypted = cipher.doFinal(data.getBytes());
+            return Base64.getEncoder().encodeToString(encrypted);
+        } catch (Exception ex) {
+            throw new RuntimeException("Error en encriptación: datos inválidos o formato incorrecto.", ex);
+        }
     }
 }
 

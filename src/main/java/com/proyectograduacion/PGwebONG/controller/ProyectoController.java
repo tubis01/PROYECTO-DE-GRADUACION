@@ -99,8 +99,9 @@ public class ProyectoController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
-    public ResponseEntity<EntityModel<DatosDetalleProyecto>> registrarProyecto(@RequestBody @Valid DatosRegistroProyecto datosRegistroProyecto,
+    public ResponseEntity<EntityModel<DatosDetalleProyecto>> registrarProyecto(@RequestBody String datosRegistroProyecto,
                                                                                UriComponentsBuilder uriComponentsBuilder) {
+        System.out.println("datos recibidos: " + datosRegistroProyecto);
         Proyecto proyecto = proyectoService.registrarProyecto(datosRegistroProyecto);
         DatosDetalleProyecto proyectoDTO = new DatosDetalleProyecto(proyecto);
         URI uri = uriComponentsBuilder.path("/proyectos/{id}").buildAndExpand(proyectoDTO.id()).toUri();

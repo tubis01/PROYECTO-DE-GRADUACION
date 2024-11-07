@@ -35,6 +35,7 @@ public class BeneficiarioController {
      * @param assembler Ensamblador de recursos paginados.
      * @return ResponseEntity con la lista de beneficiarios.
      */
+
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER') or hasRole('RESPONSABLE')")
     @GetMapping("/listar")
     public ResponseEntity<PagedModel<EntityModel<DatosDetalleBeneficiario>>> listarPersonas(Pageable pageable,
@@ -57,8 +58,9 @@ public class BeneficiarioController {
     @PreAuthorize("hasRole('ADMIN') or hasRole('DIGITADOR')")
     @PostMapping("/registrar")
     public ResponseEntity<DatosDetalleBeneficiario> registrarBeneficiario
-    (@RequestBody @Valid DatosregistroBeneficiario datosRegistroBeneficiario,
+    (@RequestBody String datosRegistroBeneficiario,
      UriComponentsBuilder uriBuilder) {
+        System.out.println("Datos recibidos: " + datosRegistroBeneficiario);
         Beneficiario beneficiario = beneficiarioService.registrarBeneficiario(datosRegistroBeneficiario);
         DatosDetalleBeneficiario beneficiarioDTO = new DatosDetalleBeneficiario(beneficiario);
         URI uri = uriBuilder.path("/beneficiarios/{id}").buildAndExpand(beneficiarioDTO.id()).toUri();

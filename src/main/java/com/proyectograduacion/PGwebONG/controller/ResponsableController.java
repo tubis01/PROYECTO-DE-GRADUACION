@@ -65,20 +65,25 @@ public class ResponsableController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
-    public ResponseEntity<DatosDetalleResponsable> registrarResponsable(@RequestBody @Valid DatosRegistroResponsable datosRegistroResponsable,
-                                                                        UriComponentsBuilder uriBuilder) {
-        Responsable responsable = responsableService.registrarResponsable(datosRegistroResponsable);
-        DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
-
+    public ResponseEntity<Responsable> registrarResponsable(@RequestBody String encryptedData,
+                                                            UriComponentsBuilder uriBuilder) {
+        System.out.println("datos recibidos: " + encryptedData);
+        Responsable responsable = responsableService.registrarResponsable(encryptedData);
         // Construir la URI del nuevo recurso
         URI uri = uriBuilder.path("/responsables/{id}").buildAndExpand(responsable.getId()).toUri();
-        return ResponseEntity.created(uri).body(responsableDTO);
+        return ResponseEntity.created(uri).body(responsable);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/modificar")
     @Transactional
-    public ResponseEntity<DatosDetalleResponsable> modificarResponsable(@RequestBody @Valid DatosActualizarResponsable datosActualizarResponsable) {
+//    public ResponseEntity<DatosDetalleResponsable> modificarResponsable(@RequestBody @Valid DatosActualizarResponsable datosActualizarResponsable) {
+//        Responsable responsable = responsableService.modificarResponsable(datosActualizarResponsable);
+//        DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
+//        return ResponseEntity.ok(responsableDTO);
+//    }
+    public ResponseEntity<DatosDetalleResponsable> modificarResponsable(@RequestBody String datosActualizarResponsable) {
+        System.out.println("datos recibidos: " + datosActualizarResponsable);
         Responsable responsable = responsableService.modificarResponsable(datosActualizarResponsable);
         DatosDetalleResponsable responsableDTO = new DatosDetalleResponsable(responsable);
         return ResponseEntity.ok(responsableDTO);

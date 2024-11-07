@@ -1,6 +1,5 @@
 package com.proyectograduacion.PGwebONG.infra.security;
 
-import com.proyectograduacion.PGwebONG.domain.usuarios.UsuarioRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -38,8 +37,7 @@ public class SecurityFilter  extends OncePerRequestFilter {
                         (usuario, null, usuario.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
-//            System.out.println(token);
-            System.out.println(tokenService.getSubject(token));
+//            System.out.println(tokenService.getSubject(token));
         }
         filterChain.doFilter(request, response);
     }

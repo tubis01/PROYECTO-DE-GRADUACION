@@ -1,11 +1,13 @@
 package com.proyectograduacion.PGwebONG.domain.personas;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectograduacion.PGwebONG.domain.beneficiario.DatosDetalleBeneficiario;
 import com.proyectograduacion.PGwebONG.domain.organizacion.Organizacion;
 import com.proyectograduacion.PGwebONG.domain.organizacion.OrganizacionRepository;
 import com.proyectograduacion.PGwebONG.domain.responsables.Responsable;
 import com.proyectograduacion.PGwebONG.domain.responsables.ResponsableRepository;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
+import com.proyectograduacion.PGwebONG.service.EncriptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,13 +21,17 @@ public class PersonaService {
     private final PersonaRepository personaRepository;
     private final ResponsableRepository responsableRepository;
     private final OrganizacionRepository organizacionRepository;
+    private final EncriptionService encriptionService;
+    private final ObjectMapper objectMapper;
 
-    public PersonaService(PersonaRepository personaRepository,
-                          ResponsableRepository responsableRepository,
-                          OrganizacionRepository organizacionRepository) {
+    public PersonaService(PersonaRepository personaRepository, ResponsableRepository responsableRepository,
+                          OrganizacionRepository organizacionRepository, EncriptionService encriptionService,
+                          ObjectMapper objectMapper) {
         this.personaRepository = personaRepository;
         this.responsableRepository = responsableRepository;
         this.organizacionRepository = organizacionRepository;
+        this.encriptionService = encriptionService;
+        this.objectMapper = objectMapper;
     }
 
     // listar personas activas
@@ -40,8 +46,11 @@ public class PersonaService {
                 .map(DatosDetallePersona::new);
     }
 
-    //    registrar persona
-    public Persona registrarPersona(DatosRegistroPersona datosRegistroPersona) {
+
+    public Persona registrarPersona(String datosEncriptados) {
+
+        String datosDesencriptado = encriptionService.decrypt(datosEncriptados);
+        DatosRegistroPersona datosRegistroPersona = converToDatosRegistroPersona(datosDesencriptado);
         validarUnicidadPersona(datosRegistroPersona);
         Responsable responsable = validarResponsable(datosRegistroPersona.responsable());
         Organizacion organizacion = validarOrganizacion(datosRegistroPersona.organizacion());
@@ -54,12 +63,16 @@ public class PersonaService {
 
 
 
+
     public Persona obtenerPersonaPorDPI(String dpi) {
         return verificarExistencia(dpi);
     }
 
 
-    public DatosDetallePersona modificarPersona(DatosActualizarPersona datosActualizarPersona) {
+    public DatosDetallePersona modificarPersona(String  datosEncriptados) {
+        String datosDesencriptado = encriptionService.decrypt(datosEncriptados);
+        System.out.println(datosDesencriptado);
+        DatosActualizarPersona datosActualizarPersona = converToDatosActualizarPersona(datosDesencriptado);
         Persona persona = verificarExistencia(datosActualizarPersona.DPI());
         Responsable responsable = datosActualizarPersona.responsable() != null ?
                 validarResponsable(Long.valueOf(datosActualizarPersona.responsable())) : persona.getResponsable();
@@ -125,5 +138,21 @@ public class PersonaService {
         PageRequest pageRequest = PageRequest.of(page, size);
         return personaRepository.findByDpiContaining(dpi, pageRequest)
                 .map(DatosDetallePersona::new).getContent();
+    }
+
+    private DatosRegistroPersona converToDatosRegistroPersona(String decryptedData) {
+        try {
+            return objectMapper.readValue(decryptedData, DatosRegistroPersona.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir los datos desencriptados.", e);
+        }
+    }
+
+    private DatosActualizarPersona converToDatosActualizarPersona(String decryptedData) {
+        try {
+            return objectMapper.readValue(decryptedData, DatosActualizarPersona.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir los datos desencriptados.", e);
+        }
     }
 }

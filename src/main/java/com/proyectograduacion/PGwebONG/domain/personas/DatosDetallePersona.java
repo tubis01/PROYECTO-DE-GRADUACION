@@ -57,7 +57,7 @@ public record DatosDetallePersona(
                 persona.isVendeExecedenteCosecha(),
                 persona.getTipoProductor(),
                 persona.getResponsable().getId(),
-                persona.getResponsable().getNombre(),
+                persona.getResponsable().getNombre() + " " + persona.getResponsable().getApellido(),
                 persona.getOrganizacion().getId(),
                 persona.getOrganizacion().getNombre(),
                 persona.getTipoVivienda()

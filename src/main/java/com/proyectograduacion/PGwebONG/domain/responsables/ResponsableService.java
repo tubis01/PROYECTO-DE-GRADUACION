@@ -1,6 +1,8 @@
 package com.proyectograduacion.PGwebONG.domain.responsables;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
+import com.proyectograduacion.PGwebONG.service.EncriptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -10,9 +12,14 @@ import org.springframework.stereotype.Service;
 public class ResponsableService {
 
     private final ResponsableRepository responsableRepository;
+    private final EncriptionService encriptionService;
+    private final ObjectMapper objectMapper;
 
-    public ResponsableService(ResponsableRepository responsableRepository) {
+    public ResponsableService(ResponsableRepository responsableRepository,
+                              EncriptionService encriptionService, ObjectMapper objectMapper) {
         this.responsableRepository = responsableRepository;
+        this.encriptionService = encriptionService;
+        this.objectMapper = objectMapper;
     }
 
     
@@ -30,19 +37,47 @@ public class ResponsableService {
         return verificarExistenciaResponsable(id);
     }
 
+    public Responsable registrarResponsable(String encryptedData) {
+        // Desencripta el payload completo
+        String decryptedData = encriptionService.decrypt(encryptedData);
+        System.out.println(decryptedData);
+        // Convierte el JSON desencriptado a un objeto DatosRegistroResponsable
+        DatosRegistroResponsable datosRegistroResponsable = convertToDatosRegistroResponsable(decryptedData);
 
-    public Responsable registrarResponsable(DatosRegistroResponsable datosRegistroDonador) {
-        validarCorreoTelefono(datosRegistroDonador);
-        Responsable newResponsable = new Responsable(datosRegistroDonador);
+        // Valida que el correo y el teléfono no estén duplicados\
+        validarCorreoTelefono(datosRegistroResponsable);
+
+        // Crea y guarda el objeto Responsable
+        Responsable newResponsable = new Responsable(datosRegistroResponsable);
         responsableRepository.save(newResponsable);
         return newResponsable;
-
     }
 
-    public Responsable modificarResponsable(DatosActualizarResponsable datosActualizarResponsable) {
+    private DatosRegistroResponsable convertToDatosRegistroResponsable(String decryptedData) {
+        try {
+            // Convierte el string JSON a un objeto DatosRegistroResponsable
+            return objectMapper.readValue(decryptedData, DatosRegistroResponsable.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir los datos desencriptados.", e);
+        }
+        }
+
+ public Responsable modificarResponsable(String datosEncriptados) {
+
+        String decryptedData = encriptionService.decrypt(datosEncriptados);
+        DatosActualizarResponsable datosActualizarResponsable = convertToDatosActualizarResponsable(decryptedData);
         Responsable responsable = verificarExistenciaResponsable(datosActualizarResponsable.id());
         responsable.actualizarResponsable(datosActualizarResponsable);
         return responsable;
+    }
+
+    private DatosActualizarResponsable convertToDatosActualizarResponsable(String decryptedData) {
+        try {
+            // Convierte el string JSON a un objeto DatosActualizarResponsable
+            return objectMapper.readValue(decryptedData, DatosActualizarResponsable.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Error al convertir los datos desencriptados.", e);
+        }
     }
 
     public void eliminarResponsable(Long id) {

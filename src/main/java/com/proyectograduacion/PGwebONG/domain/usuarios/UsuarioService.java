@@ -1,7 +1,9 @@
 package com.proyectograduacion.PGwebONG.domain.usuarios;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectograduacion.PGwebONG.emialPassword.dto.ChangePasswordDTO;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
+import com.proyectograduacion.PGwebONG.service.EncriptionService;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,12 +20,16 @@ public class UsuarioService {
     private final UsuarioRepository usuarioRepository;
     private final RolRepository rolRepository;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final EncriptionService encriptionService;
+    private final ObjectMapper objectMapper;
 
     public UsuarioService(UsuarioRepository usuarioRepository, RolRepository rolRepository,
-                          BCryptPasswordEncoder cryptPasswordEncoder) {
+                          BCryptPasswordEncoder cryptPasswordEncoder, EncriptionService encriptionService, ObjectMapper objectMapper) {
         this.usuarioRepository = usuarioRepository;
         this.rolRepository = rolRepository;
         this.bCryptPasswordEncoder = cryptPasswordEncoder;
+        this.encriptionService = encriptionService;
+        this.objectMapper = objectMapper;
     }
     /*
     * Método que lista los usuarios activos
@@ -52,7 +58,12 @@ public class UsuarioService {
 /*
 * Método que registra un usuario
  */
-    public Usuario registrarUsuario (DatosRegistroUsuario datosRegistroUsuario) {
+    public Usuario registrarUsuarios (String  datosEncriptados) {
+
+        String datosDesencriptados = encriptionService.decrypt(datosEncriptados);
+        System.out.println(datosDesencriptados);
+
+        DatosRegistroUsuario datosRegistroUsuario = convertToDatosRegistroUsuario(datosDesencriptados);
         verificarUsuarioYEmail(datosRegistroUsuario.usuario(), datosRegistroUsuario.email());
         Usuario usuario = new Usuario(datosRegistroUsuario, new BCryptPasswordEncoder());
 
@@ -69,6 +80,14 @@ public class UsuarioService {
         usuario.setRoles(roles);
         usuarioRepository.save(usuario);
         return usuario;
+    }
+
+    private DatosRegistroUsuario convertToDatosRegistroUsuario (String datosDesencriptados){
+        try {
+            return objectMapper.readValue(datosDesencriptados, DatosRegistroUsuario.class);
+        } catch (Exception e){
+            throw new validacionDeIntegridad("Error al convertir los datos");
+        }
     }
 
     /*

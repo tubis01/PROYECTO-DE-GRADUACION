@@ -1,5 +1,6 @@
 package com.proyectograduacion.PGwebONG.domain.beneficiario;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.proyectograduacion.PGwebONG.domain.beneficiario.validaciones.IValidadorBeneficiario;
 import com.proyectograduacion.PGwebONG.domain.personas.Persona;
 import com.proyectograduacion.PGwebONG.domain.personas.PersonaRepository;
@@ -8,6 +9,7 @@ import com.proyectograduacion.PGwebONG.domain.proyectos.Proyecto;
 import com.proyectograduacion.PGwebONG.domain.proyectos.ProyectoRepository;
 import com.proyectograduacion.PGwebONG.domain.proyectos.ProyectoService;
 import com.proyectograduacion.PGwebONG.infra.errores.validacionDeIntegridad;
+import com.proyectograduacion.PGwebONG.service.EncriptionService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,23 +25,26 @@ public class BeneficiarioService {
     private final ProyectoService proyectoService;
     private final PersonaRepository personaRepository;
     private final ProyectoRepository proyectoRepository;
+    private final EncriptionService encriptionService;
+    private final ObjectMapper objectMapper;
 
     private final List<IValidadorBeneficiario> validadores;
 
     public BeneficiarioService(BeneficiarioRepository beneficiarioRepository, PersonaService personaService,
                                ProyectoService proyectoService, PersonaRepository personaRepository, ProyectoRepository proyectoRepository,
-                               List<IValidadorBeneficiario> validadores) {
+                               List<IValidadorBeneficiario> validadores, EncriptionService encriptionService, ObjectMapper objectMapper) {
         this.beneficiarioRepository = beneficiarioRepository;
         this.personaService = personaService;
         this.proyectoService = proyectoService;
         this.personaRepository = personaRepository;
         this.proyectoRepository = proyectoRepository;
         this.validadores = validadores;
+        this.encriptionService = encriptionService;
+        this.objectMapper = objectMapper;
     }
 
     public Page<DatosDetalleBeneficiario> listarBeneficiarios(Pageable pageable) {
 
-        System.out.println("Listando beneficiarios");
         return beneficiarioRepository.findByActivoTrue(pageable)
                 .map(DatosDetalleBeneficiario::new);
     }
@@ -52,7 +57,12 @@ public class BeneficiarioService {
     }
 
         @Transactional
-        public Beneficiario registrarBeneficiario(DatosregistroBeneficiario datosregistroBeneficiario){
+        public Beneficiario registrarBeneficiario(String datpsEncriptados){
+
+        String datosDesencriptados = encriptionService.decrypt(datpsEncriptados);
+            System.out.println(datosDesencriptados);
+
+            DatosregistroBeneficiario datosregistroBeneficiario = convertToDatosRegistroBeneficiario(datosDesencriptados);
 
             verificarProyectoYPersona(datosregistroBeneficiario.proyecto(), datosregistroBeneficiario.dpi());
             validadores.forEach(validador -> validador.validar(datosregistroBeneficiario));
@@ -116,6 +126,14 @@ public class BeneficiarioService {
         PageRequest pageRequest = PageRequest.of(page, size);
         return beneficiarioRepository.findByProyectoNombreContaining(nombreProyecto, pageRequest)
                 .map(DatosDetalleBeneficiario::new).getContent();
+    }
+
+    private DatosregistroBeneficiario convertToDatosRegistroBeneficiario(String datosDesencriptado) {
+        try {
+            return objectMapper.readValue(datosDesencriptado, DatosregistroBeneficiario.class);
+        } catch (Exception e) {
+            throw new validacionDeIntegridad("Error al convertir los datos desencriptados.");
+        }
     }
 
 

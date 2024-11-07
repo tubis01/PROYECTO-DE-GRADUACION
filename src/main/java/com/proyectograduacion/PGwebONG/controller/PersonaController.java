@@ -73,8 +73,9 @@ public class PersonaController {
     // Registrar persona
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
-    public ResponseEntity<DatosDetallePersona> registrarPersona(@RequestBody @Valid DatosRegistroPersona datosRegistroPersona,
+    public ResponseEntity<DatosDetallePersona> registrarPersona(@RequestBody String  datosRegistroPersona,
                                                                 UriComponentsBuilder uriBuilder) {
+        System.out.println("datos recibidos: " + datosRegistroPersona);
         Persona persona = personaService.registrarPersona(datosRegistroPersona);
         DatosDetallePersona personaDTO = new DatosDetallePersona(persona);
         URI uri = uriBuilder.path("/api/personas/{id}").buildAndExpand(persona.getId()).toUri();
@@ -85,7 +86,8 @@ public class PersonaController {
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/modificar")
     @Transactional
-    public ResponseEntity<DatosDetallePersona> modificarPersona(@RequestBody @Valid DatosActualizarPersona datosActualizarPersona) {
+    public ResponseEntity<DatosDetallePersona> modificarPersona(@RequestBody @Valid String datosActualizarPersona) {
+        System.out.println("datos recibidos: " + datosActualizarPersona);
         var persona = personaService.modificarPersona(datosActualizarPersona);
         return ResponseEntity.ok(persona);
     }

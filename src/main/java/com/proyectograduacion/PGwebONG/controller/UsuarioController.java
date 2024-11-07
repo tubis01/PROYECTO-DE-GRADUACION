@@ -88,13 +88,17 @@ public class UsuarioController {
      */
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/registrar")
-    public ResponseEntity<DatosDetalleUsuario> registrarUsuario(@RequestBody @Valid DatosRegistroUsuario datosRegistroUsuario,
+
+    public ResponseEntity<DatosDetalleUsuario> registrarUsuario(@RequestBody String datosRegistroUsuario,
                                                                 UriComponentsBuilder uriBuilder) {
-        Usuario usuario = usuarioService.registrarUsuario(datosRegistroUsuario);
+        System.out.println("datos recibidos: " + datosRegistroUsuario);
+        Usuario usuario = usuarioService.registrarUsuarios(datosRegistroUsuario);
         DatosDetalleUsuario usuarioDTO = new DatosDetalleUsuario(usuario);
         URI uri = uriBuilder.path("/usuarios/{id}").buildAndExpand(usuarioDTO.id()).toUri();
         return ResponseEntity.created(uri).body(usuarioDTO);
     }
+
+
 
     /**
      * Actualiza un usuario.
